@@ -550,34 +550,119 @@
   }
   .suggestion-apply:hover { background: #235740; }
   .suggestion-apply:disabled { background: var(--step-done); cursor: default; opacity: 0.7; }
+
+  /* Clause tabs */
+  .clause-tabs { display: flex; align-items: center; gap: 6px; margin-bottom: 1rem; flex-wrap: wrap; }
+  .clause-tab {
+    padding: 5px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1.5px solid var(--border2);
+    color: var(--text3);
+    background: var(--surface);
+    transition: all 0.2s;
+  }
+  .clause-tab.active { border-color: var(--step-active); color: var(--step-active); background: var(--surface2); }
+  .clause-tab.clause-tab-accepted { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+  .clause-tab.clause-tab-kept { border-color: var(--border2); color: var(--text2); background: var(--surface2); }
+  .clause-tab-divider { width: 14px; height: 1px; background: var(--border); }
+
+  /* Clause step label */
+  .clause-step-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text3);
+    margin-bottom: 0.5rem;
+  }
+
+  /* Diff highlights */
+  .diff-added { background: #C6F0D2; color: #155724; border-radius: 3px; padding: 1px 2px; }
+  .diff-removed { background: #FADBD8; color: #7B241C; border-radius: 3px; padding: 1px 2px; text-decoration: line-through; opacity: 0.75; }
+  .diff-legend { display: flex; gap: 14px; align-items: center; font-size: 11.5px; color: var(--text2); margin-bottom: 0.5rem; flex-wrap: wrap; }
+
+  /* Dimension colour highlights */
+  .dim-behavioral { background: #DBEAFE; color: #1E40AF; border-radius: 3px; padding: 1px 3px; }
+  .dim-decision   { background: #FEF9C3; color: #854D0E; border-radius: 3px; padding: 1px 3px; }
+  .dim-wellbeing  { background: #DCFCE7; color: #166534; border-radius: 3px; padding: 1px 3px; }
+  .dim-benefits   { background: #F3E8FF; color: #6B21A8; border-radius: 3px; padding: 1px 3px; }
+  .dim-drawbacks  { background: #FEE2E2; color: #991B1B; border-radius: 3px; padding: 1px 3px; }
+  .dim-highlight-view {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    font-size: 13px;
+    line-height: 1.9;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 0.5rem;
+  }
+  .dim-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 0.5rem;
+    font-size: 11.5px;
+    font-weight: 600;
+  }
+  .dim-legend-pill { padding: 2px 9px; border-radius: 10px; }
+
+  /* AI Suggestions panel */
+  .suggestions-panel { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem 1rem; margin-bottom: 0.9rem; }
+  .suggestions-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem; }
+  .suggestions-panel-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text2); display: flex; align-items: center; gap: 6px; }
+  .suggestions-panel-title::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); display: inline-block; flex-shrink: 0; }
+  .suggestion-card { background: var(--surface); border: 1px solid #A8D5BC; border-radius: 7px; padding: 0.65rem 0.9rem; margin-bottom: 0.45rem; display: flex; gap: 10px; align-items: flex-start; animation: fadeIn 0.2s ease; }
+  .suggestion-card:last-child { margin-bottom: 0; }
+  .suggestion-card.suggestion-applied { opacity: 0.5; border-color: var(--border); }
+  .suggestion-card-text { flex: 1; font-size: 13px; color: var(--text); line-height: 1.6; }
+  .suggestion-card-add { padding: 3px 12px; font-size: 12px; font-weight: 500; white-space: nowrap; flex-shrink: 0; background: var(--accent); color: #fff; border: none; border-radius: 5px; cursor: pointer; font-family: var(--font-sans); transition: background 0.15s; }
+  .suggestion-card-add:hover { background: #235740; }
+  .suggestion-card-add:disabled { background: var(--border2); cursor: default; }
+
+  /* Revise-stage mini chat */
+  .revise-chat { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 0.9rem; }
+  .revise-chat-history { padding: 0.75rem 1rem; max-height: 160px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.6rem; background: var(--surface); }
+  .revise-chat-msg { font-size: 13px; line-height: 1.6; padding: 0.5rem 0.75rem; border-radius: 7px; max-width: 92%; }
+  .revise-chat-msg.user { background: var(--text); color: #fff; align-self: flex-end; border-bottom-right-radius: 2px; }
+  .revise-chat-msg.ai { background: var(--surface2); border: 1px solid var(--border); color: var(--text); align-self: flex-start; border-bottom-left-radius: 2px; }
+  .revise-chat-input-row { display: flex; gap: 8px; align-items: flex-end; padding: 0.5rem 0.75rem; border-top: 1px solid var(--border); background: var(--surface2); }
 </style>
 </head>
 <body>
 
 
 <div class="progress-bar" id="progressBar">
-  <div class="step active" data-stage="0">
+  <div class="step active">
     <div class="step-num">1</div>
     <div class="step-label">Welcome</div>
   </div>
   <div class="step-divider"></div>
-  <div class="step" data-stage="1">
+  <div class="step">
     <div class="step-num">2</div>
-    <div class="step-label">Read & Analyse</div>
+    <div class="step-label">Clause 2</div>
   </div>
   <div class="step-divider"></div>
-  <div class="step" data-stage="2">
+  <div class="step">
     <div class="step-num">3</div>
-    <div class="step-label">AI Feedback</div>
+    <div class="step-label">Clause 3</div>
   </div>
   <div class="step-divider"></div>
-  <div class="step" data-stage="3">
+  <div class="step">
     <div class="step-num">4</div>
-    <div class="step-label">Revise</div>
+    <div class="step-label">Clause 5</div>
   </div>
   <div class="step-divider"></div>
-  <div class="step" data-stage="4">
+  <div class="step">
     <div class="step-num">5</div>
+    <div class="step-label">Review & Submit</div>
+  </div>
+  <div class="step-divider"></div>
+  <div class="step">
+    <div class="step-num">6</div>
     <div class="step-label">Done</div>
   </div>
 </div>
@@ -588,7 +673,7 @@
   <div class="stage active" id="stage-0">
     <div class="intro-hero">
       <h1>Policy Analysis Study</h1>
-      <p>You will analyze a university AI usage policy, get structured feedback from an AI assistant, and revise your analysis. The whole process takes about 20–30 minutes.</p>
+      <p>You will analyze a university AI usage policy clause by clause. While writing, you may ask an AI assistant for guidance, but your final analysis should reflect your own judgment.</p>
     </div>
     <div class="intro-steps">
       <div class="intro-step-card">
@@ -598,13 +683,13 @@
       </div>
       <div class="intro-step-card">
         <div class="intro-step-num">2</div>
-        <h4>Get AI Feedback</h4>
-        <p>An AI assistant will review your analysis and suggest improvements.</p>
+        <h4>AI Chat While Writing</h4>
+        <p>Ask the AI assistant questions while writing, without receiving automatic AI rewrites after each clause.</p>
       </div>
       <div class="intro-step-card">
         <div class="intro-step-num">3</div>
-        <h4>Revise & Submit</h4>
-        <p>Revise your analysis based on the feedback, then submit both versions.</p>
+        <h4>Submit</h4>
+        <p>Your clause-by-clause analysis and chat history are saved for the study.</p>
       </div>
     </div>
 
@@ -659,169 +744,99 @@
     </div>
   </div>
 
-<!-- Stage 1: Read & Analyse -->
-<div class="stage" id="stage-1">
-  <div class="card">
+  <!-- Stage 1: Read & Analyse (one clause at a time + AI chat) -->
+  <div class="stage" id="stage-1">
+    <div class="card">
+      <div class="clause-step-label" id="readStepLabel">Clause 1 of 3 — Read &amp; Analyse</div>
+      <div class="card-title" id="readClauseTitle">Read &amp; Analyse — Clause 2</div>
+      <div class="card-sub">Read the clause carefully, then write your analysis on the right. Use the AI assistant if you want help understanding the clause or the analysis dimensions.</div>
 
-    <div class="clause-step-label" id="readStepLabel">
-      Clause 1 of 3 — Read & Analyse
-    </div>
-
-    <div class="card-title" id="readClauseTitle">
-      Read & Analyse — Clause 2
-    </div>
-
-    <div class="card-sub">
-      Read the clause carefully, then write your analysis while using the AI assistant if needed.
-    </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:start;margin-bottom:1rem;">
-
-      <!-- LEFT: POLICY -->
-      <div>
-
-        <div class="compare-col-label label-original" style="margin-bottom:8px;">
-          Policy Clause
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:start;margin-bottom:1rem;">
+        <div>
+          <div class="compare-col-label label-original" style="margin-bottom:8px;">Policy Clause</div>
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1rem;margin-bottom:0.75rem;font-size:12.5px;color:var(--text2);line-height:1.65;">
+            <strong style="color:var(--text);display:block;margin-bottom:3px;">Policy Background</strong>
+            Taken from the Yonsei University Guidelines for Students on the Use of Generative AI.
+          </div>
+          <div class="policy-block" id="readPolicyContent" style="margin-bottom:0;"></div>
         </div>
 
-        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1rem;margin-bottom:0.75rem;font-size:12.5px;color:var(--text2);line-height:1.65;">
-          <strong style="color:var(--text);display:block;margin-bottom:3px;">
-            Policy Background
-          </strong>
-          Taken from the Yonsei University Guidelines for Students on the Use of Generative AI.
-        </div>
+        <div>
+          <div class="compare-col-label label-revised" style="margin-bottom:8px;">Your Analysis</div>
 
-        <div class="policy-block" id="readPolicyContent"></div>
-
-      </div>
-
-      <!-- RIGHT: ANALYSIS + AI CHAT -->
-      <div>
-
-        <div class="compare-col-label label-revised" style="margin-bottom:8px;">
-          Your Analysis
-        </div>
-
-        <div class="prompt-guide">
-          <h4>Consider these dimensions:</h4>
-
-          <ol id="dimensionsList"></ol>
-        </div>
-
-        <textarea
-          id="clauseAnalysisInput"
-          placeholder="Write your analysis here..."
-          oninput="updateReadWC()"
-          style="min-height:220px;"
-        ></textarea>
-
-        <div class="wc" id="readWC">0 words</div>
-
-        <!-- AI CHAT PANEL -->
-        <div class="chat-box" style="margin-top:1rem;">
-
-          <div style="padding:0.85rem 1rem;border-bottom:1px solid var(--border);background:var(--surface2);">
-            <div style="font-size:13px;font-weight:600;color:var(--text);">
-              AI Writing Assistant
-            </div>
-
-            <div style="font-size:12px;color:var(--text2);line-height:1.5;">
-              Ask questions while writing. The AI will guide your thinking, not write the full answer for you.
-            </div>
+          <div class="prompt-guide">
+            <h4>Consider these dimensions for this clause:</h4>
+            <ol id="dimensionsList"></ol>
           </div>
 
-          <div class="chat-messages" id="clauseChatMessages" style="max-height:260px;">
+          <textarea id="clauseAnalysisInput" placeholder="Write your analysis here..." oninput="updateReadWC()" style="min-height:220px;"></textarea>
+          <div class="wc" id="readWC">0 words</div>
 
-            <div class="msg ai">
-              <div class="msg-avatar">AI</div>
-
-              <div class="msg-bubble">
-                Hi! I can help you understand this clause, think through the 5 dimensions, or improve your reasoning.
+          <!-- AI chat panel while writing -->
+          <div class="chat-box" style="margin-top:1rem;">
+            <div style="padding:0.85rem 1rem;border-bottom:1px solid var(--border);background:var(--surface2);">
+              <div style="font-size:13px;font-weight:600;color:var(--text);">AI Writing Assistant</div>
+              <div style="font-size:12px;color:var(--text2);line-height:1.5;">
+                Ask questions while writing. The AI will guide your thinking, not write the full answer for you.
               </div>
             </div>
 
+            <div class="chat-messages" id="clauseChatMessages" style="max-height:260px;">
+              <div class="msg ai">
+                <div class="msg-avatar">AI</div>
+                <div class="msg-bubble">Hi! I can help you understand this clause, think through the 5 dimensions, or improve your reasoning.</div>
+              </div>
+            </div>
+
+            <div class="chat-input-area">
+              <textarea
+                class="chat-input"
+                id="clauseChatInput"
+                placeholder="Ask about this clause..."
+                rows="1"
+                onkeydown="handleClauseChatKey(event)"
+              ></textarea>
+              <button class="chat-send" id="clauseChatSendBtn" onclick="sendClauseChat()">Send</button>
+            </div>
           </div>
 
-          <div class="chat-input-area">
-
-            <textarea
-              class="chat-input"
-              id="clauseChatInput"
-              placeholder="Ask about this clause..."
-              rows="1"
-              onkeydown="handleClauseChatKey(event)"
-            ></textarea>
-
-            <button
-              class="chat-send"
-              id="clauseChatSendBtn"
-              onclick="sendClauseChat()"
-            >
-              Send
-            </button>
-
+          <div class="feedback-tags" style="margin-top:0.75rem;">
+            <button class="ftag" onclick="quickClauseAsk('Can you explain this clause in simpler terms?')">Explain clause</button>
+            <button class="ftag" onclick="quickClauseAsk('What are possible benefits of this clause?')">Benefits ideas</button>
+            <button class="ftag" onclick="quickClauseAsk('What are possible drawbacks of this clause?')">Drawbacks ideas</button>
+            <button class="ftag" onclick="quickClauseAsk('What does the well-being dimension mean here?')">Well-being help</button>
           </div>
-
         </div>
-
-        <!-- QUICK PROMPTS -->
-        <div class="feedback-tags" style="margin-top:0.75rem;">
-
-          <button class="ftag" onclick="quickClauseAsk('Can you explain this clause in simpler terms?')">
-            Explain clause
-          </button>
-
-          <button class="ftag" onclick="quickClauseAsk('What are possible benefits of this clause?')">
-            Benefits ideas
-          </button>
-
-          <button class="ftag" onclick="quickClauseAsk('What are possible drawbacks of this clause?')">
-            Drawbacks ideas
-          </button>
-
-          <button class="ftag" onclick="quickClauseAsk('What does the well-being dimension mean here?')">
-            Well-being help
-          </button>
-
-        </div>
-
       </div>
 
+      <div class="btn-row">
+        <button class="btn btn-secondary" id="readBackBtn" onclick="prevReadClause()">← Back</button>
+        <button class="btn btn-primary" id="readNextBtn" onclick="nextReadClause()" disabled>Next Clause →</button>
+      </div>
     </div>
-
-    <div class="btn-row">
-
-      <button
-        class="btn btn-secondary"
-        id="readBackBtn"
-        onclick="prevReadClause()"
-      >
-        ← Back
-      </button>
-
-      <button
-        class="btn btn-primary"
-        id="readNextBtn"
-        onclick="nextReadClause()"
-        disabled
-      >
-        Next Clause →
-      </button>
-
-    </div>
-
   </div>
-</div>
 
- 
+  <!-- Stage 3: Review & Submit -->
+  <div class="stage" id="stage-3">
+    <div class="card">
+      <div class="card-title">Review Your Analysis</div>
+      <div class="card-sub">Review your clause-by-clause analysis below. Make sure you're happy with everything before submitting — this cannot be undone.</div>
+      <div id="finalReviewContent"></div>
+      <div class="btn-row" style="margin-top:1.5rem;justify-content:space-between;">
+        <button class="btn btn-secondary" onclick="goBackToLastClause()">← Go Back &amp; Edit Last Clause</button>
+        <button class="btn btn-accent" id="finalSubmitBtn" onclick="submitFinal()">Submit Analysis →</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Stage 4: Done -->
   <div class="stage" id="stage-4">
     <div class="card" style="text-align:center;padding:2.5rem 1.5rem;">
       <div class="success-icon">✓</div>
       <div class="success-title">Submission Complete</div>
-      <div class="success-sub">Thank you for participating in the Goal Diggers HAI Study. Both versions of your analysis have been recorded and anonymized.</div>
+      <div class="success-sub">Thank you for participating in the Goal Diggers HAI Study. Your analysis has been recorded and anonymized.</div>
       <hr class="sep">
-      <p style="font-size:14px;color:var(--text2);margin-bottom:1.5rem;">Your responses will be evaluated by other student participants in a blind study. Results will be used to compare the quality of human-only vs. AI-assisted policy analysis.</p>
+      <p style="font-size:14px;color:var(--text2);margin-bottom:1.5rem;">Your responses will be evaluated by other student participants in a blind study. Results will be used to study how students use AI assistance while writing policy analysis.</p>
       <div id="submissionSummary" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;text-align:left;font-size:13px;color:var(--text2);margin-bottom:1.5rem;"></div>
       <button class="btn btn-secondary" onclick="window.print()">Print / Save a Copy</button>
     </div>
@@ -830,65 +845,86 @@
 </div>
 
 <script>
-const POLICY_TEXT = `Yonsei University — Guidelines for Students on the Use of Generative AI
+// ── Clause metadata ─────────────────────────────────────────────────────────
+const CLAUSES = [
+  {
+    label: 'Clause 2',
+    title: 'Clause 2 — Verify Accuracy & Reliability',
+    sub: 'The AI is reviewing and improving how your analysis addresses Clause 2 (verifying AI accuracy, understanding limitations, avoiding over-dependence).',
+    focus: 'Clause 2: verifying the accuracy and reliability of AI outputs, understanding its limitations, and avoiding over-dependence on AI tools',
+    nextLabel: 'Next: Clause 3 →'
+  },
+  {
+    label: 'Clause 3',
+    title: 'Clause 3 — Ethics & Bias Awareness',
+    sub: 'The AI is reviewing and improving how your analysis addresses Clause 3 (acting ethically, being aware of AI biases, critical scrutiny).',
+    focus: 'Clause 3: acting ethically when using AI, being aware of potential biases in AI outputs, and applying critical scrutiny to AI-generated content',
+    nextLabel: 'Next: Clause 5 →'
+  },
+  {
+    label: 'Clause 5',
+    title: 'Clause 5 — Proper Citation',
+    sub: 'The AI is reviewing and improving how your analysis addresses Clause 5 (properly citing generative AI tools in academic work).',
+    focus: 'Clause 5: properly citing generative AI tools in academic work, including the model name, prompt entered, and platform',
+    nextLabel: 'Submit Both Versions →'
+  }
+];
 
-Clause 2. Verify accuracy and reliability of AI outputs.
-Due to its inherent nature, generative AI may produce false or misleading information. It is essential to critically verify and fact-check its outputs.
-- Understand the limitations and potential drawbacks of generative AI, and evaluate its outputs with a critical and questioning mindset.
-- Always keep your learning objectives in mind. Emphasise self-directed learning and inquiry, and be mindful not to become overly dependent on AI tools.
+// ── Per-clause content for Stage 1 ──────────────────────────────────────────
+const CLAUSE_READ_CONTENT = [
+  {
+    policyHTML: `<h3>Clause 2 — Verify Accuracy &amp; Reliability</h3>
+      <p>Due to its inherent nature, generative AI may produce false or misleading information. It is essential to critically verify and fact-check its outputs.</p>
+      <p>• Understand the limitations and potential drawbacks of generative AI, and evaluate its outputs with a critical and questioning mindset.</p>
+      <p>• Always keep your learning objectives in mind. Emphasise self-directed learning and inquiry, and be mindful not to become overly dependent on AI tools.</p>`,
+    dimensions: [
+      'Behavioral Impact — How does this clause affect your behaviour or habits when using AI?',
+      'Decision-Making — How does this clause influence your decisions about using AI in academic work?',
+      'Well-being — What implications does this clause have for your academic well-being or stress?',
+      'Benefits — What are the key benefits of following this clause?',
+      'Potential Drawbacks — What challenges might arise when trying to follow this clause?'
+    ]
+  },
+  {
+    policyHTML: `<h3>Clause 3 — Ethics &amp; Bias Awareness</h3>
+      <p>Although generative AI is designed to reject unethical prompts, indirect or rephrased questions may still lead to the generation of inappropriate or unethical content. Users should exercise caution, discretion, and a strong sense of responsibility.</p>
+      <p>• When AI is trained on biased or discriminatory data, it may produce skewed or harmful outputs that could inadvertently influence your academic work or research outcomes. Always remain vigilant and evaluate AI-generated content with critical scrutiny.</p>`,
+    dimensions: [
+      'Behavioral Impact — How does this clause affect your behaviour or habits when using AI?',
+      'Decision-Making — How does this clause influence your decisions about using AI in academic work?',
+      'Well-being — What implications does this clause have for your academic well-being or stress?',
+      'Benefits — What are the key benefits of following this clause?',
+      'Potential Drawbacks — What challenges might arise when trying to follow this clause?'
+    ]
+  },
+  {
+    policyHTML: `<h3>Clause 5 — Proper Citation</h3>
+      <p>If students use generative AI in their academic work, they must provide clear and accurate citations. Submitting AI-generated content without proper attribution or using it without modification may be considered plagiarism or academic misconduct.</p>
+      <p>• Provide clear citations including the specific model used, the prompt entered, and the name of the platform.</p>
+      <p><em>Example (APA):</em> OpenAI. (Year). ChatGPT (Month Day version) [Large language model]. https://chat.openai.com</p>
+      <p><em>Example (MLA):</em> "Exact prompt you used" prompt. ChatGPT, Day Month version, OpenAI, Day Month Year, chat.openai.com.</p>`,
+    dimensions: [
+      'Behavioral Impact — How does this clause affect your behaviour or habits when using AI?',
+      'Decision-Making — How does this clause influence your decisions about using AI in academic work?',
+      'Well-being — What implications does this clause have for your academic well-being or stress?',
+      'Benefits — What are the key benefits of following this clause?',
+      'Potential Drawbacks — What challenges might arise when trying to follow this clause?'
+    ]
+  }
+];
 
-Clause 3. Act ethically and remain aware of potential biases in AI outputs.
-Although generative AI is designed to reject unethical prompts, indirect or rephrased questions may still lead to the generation of inappropriate or unethical content. Users should exercise caution, discretion, and a strong sense of responsibility.
-- When AI is trained on biased or discriminatory data, it may produce skewed or harmful outputs that could inadvertently influence your academic work or research outcomes. Always remain vigilant and evaluate AI-generated content with critical scrutiny.
-
-Clause 5. Always provide proper citation when using generative AI tools.
-If students use generative AI in their academic work, they must provide clear and accurate citations. Submitting AI-generated content without proper attribution or using it without modification may be considered plagiarism or academic misconduct.
-- Provide clear citations including the specific model used, the prompt entered, and the name of the platform.
-Example (APA): OpenAI. (Year). ChatGPT (Month Day version) [Large language model]. https://chat.openai.com
-Example (MLA): "Exact prompt you used" prompt. ChatGPT, Day Month version, OpenAI, Day Month Year, chat.openai.com.`;
-
-const SYSTEM_PROMPT = `You are an AI research assistant in a Human-AI Interaction (HAI) academic study. Your role is to provide structured, constructive feedback on a student's analysis of a university AI usage policy.
-
-The policy text is:
-${POLICY_TEXT}
-
-The student was asked to address 5 dimensions:
-1. Behavioral Impact — How might this policy change how students work on assignments?
-2. Decision-Making — How does it affect decisions students make about using AI?
-3. Well-being — What emotional or psychological effects might this policy have?
-4. Benefits — What are the genuine benefits of this policy for students?
-5. Potential Drawbacks — What are realistic concerns or limitations of this policy?
-
-When giving feedback:
-- Be specific and structured. Address each dimension the student covered.
-- Highlight what was done well (genuine strengths, not vague praise).
-- Identify what is missing or underdeveloped — especially missing student perspectives, edge cases, or lived-experience nuance.
-- Suggest 2–3 concrete improvements the student can make.
-- Be supportive but honest. Avoid being sycophantic.
-- Keep responses focused and under 350 words unless the student asks a specific follow-up question.
-- Do NOT rewrite the analysis for the student. Guide, don't replace.
-
-After every response, you MUST append a suggestions block formatted EXACTLY like this (no deviation):
-
-ACTIONABLE SUGGESTIONS:
-[1] Write a complete sentence or short paragraph (1–3 sentences) in the student's voice that they can directly insert into their revised analysis. Make it specific and substantive — not meta-advice, but actual content.
-[2] A second ready-to-insert sentence or paragraph addressing a different dimension or gap.
-[3] A third ready-to-insert sentence or paragraph.
-
-Rules for suggestions:
-- Write in first person from the student's perspective (e.g. "This policy may create anxiety among students who...")
-- Each suggestion must be self-contained and add real value when inserted into the analysis
-- Cover different dimensions or gaps than each other
-- Do not use bullet points inside a suggestion — write in prose`;
-
-let chatHistory = [];
-let isTyping = false;
+// ── State ────────────────────────────────────────────────────────────────────
 let currentStage = 0;
+let currentClauseIndex = 0;
+let clauseAnalyses = ['', '', ''];
+let clauseChatHistories = [[], [], []];
+let isChatting = false;
 
+// ── Stage 0: Welcome ─────────────────────────────────────────────────────────
 function checkStartBtn() {
-  const major = document.getElementById('major').value.trim();
-  const year = document.getElementById('year').value;
-  const ai = document.getElementById('aiFamiliarity').value;
+  const major  = document.getElementById('major').value.trim();
+  const year   = document.getElementById('year').value;
+  const ai     = document.getElementById('aiFamiliarity').value;
   const policy = document.getElementById('policyAttitude').value;
   document.getElementById('startBtn').disabled = !(major && year && ai && policy);
 }
@@ -898,212 +934,287 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById(id).addEventListener('change', checkStartBtn);
     document.getElementById(id).addEventListener('input', checkStartBtn);
   });
+
+  updateProgressBar();
 });
 
-function goToStage(n) {
-  document.getElementById('stage-' + currentStage).classList.remove('active');
+// ── Progress bar ─────────────────────────────────────────────────────────────
+// Steps: 0=Welcome, 1=Clause2, 2=Clause3, 3=Clause5, 4=Review&Submit, 5=Done
+function updateProgressBar() {
+  let activeStep;
+
+  if (currentStage === 0) activeStep = 0;
+  else if (currentStage === 4) activeStep = 5;
+  else if (currentStage === 3) activeStep = 4;
+  else activeStep = 1 + currentClauseIndex;
+
   document.querySelectorAll('.step').forEach((s, i) => {
     s.classList.remove('active', 'done');
-    if (i < n) s.classList.add('done');
-    else if (i === n) s.classList.add('active');
+    if (i < activeStep) s.classList.add('done');
+    else if (i === activeStep) s.classList.add('active');
   });
+}
+
+// ── Stage navigation ─────────────────────────────────────────────────────────
+function goToStage(n) {
+  document.getElementById('stage-' + currentStage).classList.remove('active');
   currentStage = n;
   document.getElementById('stage-' + n).classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
+  updateProgressBar();
 
-  if (n === 2 && chatHistory.length === 0) {
-    startFeedback();
-  }
-  if (n === 3) {
-    document.getElementById('originalDisplay').textContent = document.getElementById('originalAnalysis').value;
-    updateWC('revisedAnalysis', 'wc2');
+  if (n === 1) loadReadClause(currentClauseIndex);
+  if (n === 3) loadFinalReview();
+}
+
+// ── Stage 1: Read & Analyse + AI chat ────────────────────────────────────────
+function loadReadClause(index) {
+  const clause = CLAUSES[index];
+  const content = CLAUSE_READ_CONTENT[index];
+
+  document.getElementById('readStepLabel').textContent =
+    `Clause ${index + 1} of ${CLAUSES.length} — Read & Analyse`;
+
+  document.getElementById('readClauseTitle').textContent =
+    'Read & Analyse — ' + clause.label;
+
+  document.getElementById('readPolicyContent').innerHTML = content.policyHTML;
+
+  document.getElementById('dimensionsList').innerHTML =
+    content.dimensions.map(d => `<li>${escapeHTML(d)}</li>`).join('');
+
+  document.getElementById('clauseAnalysisInput').value = clauseAnalyses[index] || '';
+
+  document.getElementById('readBackBtn').textContent =
+    index === 0 ? '← Welcome' : '← Previous Clause';
+
+  document.getElementById('readNextBtn').textContent =
+    index === CLAUSES.length - 1 ? 'Review & Submit →' : CLAUSES[index].nextLabel;
+
+  updateReadWC();
+  renderClauseChat(index);
+}
+
+function updateReadWC() {
+  const val = document.getElementById('clauseAnalysisInput').value;
+  const count = val.trim() ? val.trim().split(/\s+/).length : 0;
+
+  clauseAnalyses[currentClauseIndex] = val;
+  document.getElementById('readWC').textContent =
+    count + ' word' + (count !== 1 ? 's' : '');
+
+  document.getElementById('readNextBtn').disabled = count < 20;
+}
+
+function nextReadClause() {
+  clauseAnalyses[currentClauseIndex] = document.getElementById('clauseAnalysisInput').value;
+
+  if (currentClauseIndex < CLAUSES.length - 1) {
+    currentClauseIndex++;
+    goToStage(1);
+  } else {
+    goToStage(3);
   }
 }
 
-function updateWC(id, wcId) {
-  const val = document.getElementById(id).value.trim();
-  const count = val ? val.split(/\s+/).length : 0;
-  document.getElementById(wcId).textContent = count + ' word' + (count !== 1 ? 's' : '');
-  if (id === 'originalAnalysis') {
-    document.getElementById('submitAnalysisBtn').disabled = count < 50;
+function prevReadClause() {
+  clauseAnalyses[currentClauseIndex] = document.getElementById('clauseAnalysisInput').value;
+
+  if (currentClauseIndex > 0) {
+    currentClauseIndex--;
+    goToStage(1);
+  } else {
+    goToStage(0);
   }
 }
 
-document.getElementById('originalAnalysis').addEventListener('input', () => {
-  updateWC('originalAnalysis', 'wc1');
-});
+// ── AI chat while writing ────────────────────────────────────────────────────
+function renderClauseChat(index) {
+  const el = document.getElementById('clauseChatMessages');
+  const history = clauseChatHistories[index];
 
-function submitAnalysis() {
-  const text = document.getElementById('originalAnalysis').value.trim();
-  if (text.split(/\s+/).length < 50) {
-    alert('Please write at least 50 words before submitting.');
+  if (!history.length) {
+    el.innerHTML = `
+      <div class="msg ai">
+        <div class="msg-avatar">AI</div>
+        <div class="msg-bubble">Hi! I can help you understand this clause, think through the 5 dimensions, or improve your reasoning.</div>
+      </div>
+    `;
     return;
   }
-  // Pre-populate revision draft so applied suggestions append cleanly
-  document.getElementById('revisedAnalysis').value = text;
-  updateWC('revisedAnalysis', 'wc2');
-  goToStage(2);
+
+  el.innerHTML = history.map(m => `
+    <div class="msg ${m.role === 'user' ? 'user' : 'ai'}">
+      <div class="msg-avatar">${m.role === 'user' ? 'You' : 'AI'}</div>
+      <div class="msg-bubble">${escapeHTML(m.content).replace(/\n/g, '<br>')}</div>
+    </div>
+  `).join('');
+
+  el.scrollTop = el.scrollHeight;
 }
 
-function addMessage(role, content) {
-  const msgs = document.getElementById('chatMessages');
-  const div = document.createElement('div');
-  div.className = 'msg ' + (role === 'user' ? 'user' : 'ai');
-  const initial = role === 'user' ? 'You' : 'AI';
-  div.innerHTML = `<div class="msg-avatar">${initial}</div><div class="msg-bubble">${content.replace(/\n/g,'<br>')}</div>`;
-  msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
+function showClauseTyping() {
+  const el = document.getElementById('clauseChatMessages');
+  const typing = document.createElement('div');
+  typing.className = 'msg ai';
+  typing.id = 'clauseTypingMsg';
+  typing.innerHTML = `
+    <div class="msg-avatar">AI</div>
+    <div class="msg-bubble">
+      <div class="typing-indicator"><span></span><span></span><span></span></div>
+    </div>
+  `;
+  el.appendChild(typing);
+  el.scrollTop = el.scrollHeight;
 }
 
-function showTyping() {
-  const msgs = document.getElementById('chatMessages');
-  const div = document.createElement('div');
-  div.className = 'msg ai';
-  div.id = 'typingMsg';
-  div.innerHTML = `<div class="msg-avatar">AI</div><div class="msg-bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div>`;
-  msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
+function removeClauseTyping() {
+  const typing = document.getElementById('clauseTypingMsg');
+  if (typing) typing.remove();
 }
 
-function removeTyping() {
-  const t = document.getElementById('typingMsg');
-  if (t) t.remove();
-}
+async function sendClauseChat() {
+  if (isChatting) return;
 
-async function callClaude(userMessage) {
-  chatHistory.push({ role: 'user', content: userMessage });
-  showTyping();
-  document.getElementById('chatSendBtn').disabled = true;
-  isTyping = true;
+  const input = document.getElementById('clauseChatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  const index = currentClauseIndex;
+  const clause = CLAUSES[index];
+  const currentDraft = document.getElementById('clauseAnalysisInput').value.trim();
+
+  input.value = '';
+  clauseChatHistories[index].push({ role: 'user', content: msg });
+  renderClauseChat(index);
+
+  isChatting = true;
+  document.getElementById('clauseChatSendBtn').disabled = true;
+  showClauseTyping();
 
   try {
     const response = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: SYSTEM_PROMPT,
-        messages: chatHistory
+        system: `
+You are an AI writing assistant for a university policy analysis study.
+
+The student is currently analysing:
+${clause.focus}
+
+Rules:
+- Help the student understand the clause.
+- Give hints, guiding questions, and short examples.
+- Encourage critical thinking.
+- Do NOT write the full answer for the student.
+- Do NOT rewrite the student's whole analysis.
+- Keep responses concise and useful.
+
+Current student draft:
+${currentDraft || 'The student has not written anything yet.'}
+        `,
+        messages: clauseChatHistories[index],
+        max_tokens: 500
       })
     });
+
     const data = await response.json();
-    const reply = data.content?.map(b => b.text || '').join('') || 'Sorry, I could not generate feedback at this time.';
-    removeTyping();
-    chatHistory.push({ role: 'assistant', content: reply });
-    const { displayText, suggestions } = parseResponse(reply);
-    addMessage('ai', displayText);
-    showSuggestionCards(suggestions);
-  } catch (err) {
-    removeTyping();
-    addMessage('ai', 'There was an error connecting to the AI service. Please check your connection and try again.');
+    const reply =
+      data.content?.[0]?.text?.trim()
+      || data.content?.map?.(b => b.text || '').join('')
+      || 'Sorry, I could not respond right now.';
+
+    removeClauseTyping();
+    clauseChatHistories[index].push({ role: 'assistant', content: reply });
+    renderClauseChat(index);
+
+  } catch {
+    removeClauseTyping();
+    clauseChatHistories[index].push({
+      role: 'assistant',
+      content: 'Sorry, there was an error connecting to the AI assistant. Please try again.'
+    });
+    renderClauseChat(index);
   }
-  document.getElementById('chatSendBtn').disabled = false;
-  isTyping = false;
+
+  isChatting = false;
+  document.getElementById('clauseChatSendBtn').disabled = false;
 }
 
-async function startFeedback() {
-  const analysis = document.getElementById('originalAnalysis').value.trim();
-  const firstMsg = `Here is my analysis of the university AI usage policy:\n\n${analysis}\n\nPlease provide your structured feedback on my analysis.`;
-  await callClaude(firstMsg);
+function quickClauseAsk(question) {
+  if (isChatting) return;
+  document.getElementById('clauseChatInput').value = question;
+  sendClauseChat();
 }
 
-async function sendChatMessage() {
-  const input = document.getElementById('chatInput');
-  const msg = input.value.trim();
-  if (!msg || isTyping) return;
-  input.value = '';
-  addMessage('user', msg);
-  await callClaude(msg);
-}
-
-function quickAsk(q) {
-  if (isTyping) return;
-  addMessage('user', q);
-  callClaude(q);
-}
-
-function handleChatKey(e) {
+function handleClauseChatKey(e) {
   if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
-    sendChatMessage();
+    sendClauseChat();
   }
 }
 
-function parseResponse(text) {
-  const marker = 'ACTIONABLE SUGGESTIONS:';
-  const idx = text.indexOf(marker);
-  if (idx === -1) return { displayText: text, suggestions: [] };
+// ── Stage 3: Final Review ────────────────────────────────────────────────────
+function loadFinalReview() {
+  const container = document.getElementById('finalReviewContent');
 
-  const displayText = text.slice(0, idx).trim();
-  const suggBlock = text.slice(idx + marker.length);
-  const suggestions = [];
-  const matches = [...suggBlock.matchAll(/\[(\d+)\]([\s\S]+?)(?=\[\d+\]|$)/g)];
-  matches.forEach(m => {
-    const s = m[2].trim();
-    if (s) suggestions.push(s);
-  });
-  return { displayText, suggestions };
-}
+  container.innerHTML = CLAUSES.map((clause, i) => {
+    const analysis = escapeHTML(clauseAnalyses[i] || '');
 
-function showSuggestionCards(suggestions) {
-  const container = document.getElementById('suggestionCards');
-  if (!suggestions.length) { container.style.display = 'none'; return; }
+    return `
+      <div style="margin-bottom:1.5rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem;">
+          <strong style="font-size:14px;font-family:var(--font-serif);">${clause.label}</strong>
+          <span class="compare-col-label label-revised" style="margin-bottom:0;vertical-align:middle;">Your Analysis</span>
+        </div>
 
-  container.style.display = 'block';
-  container.innerHTML = `<div class="suggestion-cards-title">Actionable suggestions — click to add directly to your revision draft</div>`;
-  window._suggestions = suggestions;
-
-  suggestions.forEach((s, i) => {
-    const card = document.createElement('div');
-    card.className = 'suggestion-card';
-    card.id = 'sc-' + i;
-    card.innerHTML = `
-      <div class="suggestion-index">${i + 1}</div>
-      <div class="suggestion-text">${s}</div>
-      <button class="suggestion-apply" onclick="applySuggestion(${i}, this)">+ Add to Draft</button>
+        <div class="text-display" style="min-height:80px;font-size:13px;white-space:pre-wrap;line-height:1.65;">${analysis}</div>
+      </div>
+      ${i < CLAUSES.length - 1 ? '<hr class="sep" style="margin:0 0 1.5rem;">' : ''}
     `;
-    container.appendChild(card);
-  });
+  }).join('');
 }
 
-function applySuggestion(index, btn) {
-  const s = window._suggestions[index];
-  const revised = document.getElementById('revisedAnalysis');
-  revised.value = revised.value.trim() + '\n\n' + s;
-  updateWC('revisedAnalysis', 'wc2');
-  btn.textContent = '✓ Added';
-  btn.disabled = true;
-  document.getElementById('sc-' + index).classList.add('applied');
+function goBackToLastClause() {
+  currentClauseIndex = CLAUSES.length - 1;
+  goToStage(1);
 }
 
+// ── Stage 4: Submit ──────────────────────────────────────────────────────────
 async function submitFinal() {
-  const revised = document.getElementById('revisedAnalysis').value.trim();
-  if (revised.split(/\s+/).length < 50) {
-    alert('Please write a revised analysis of at least 50 words.');
-    return;
-  }
+  const btn = document.getElementById('finalSubmitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+
+  const finalAnalysis = clauseAnalyses
+    .map((t, i) => `[${CLAUSES[i].label}]\n${t}`)
+    .join('\n\n');
 
   const major = document.getElementById('major').value || 'Not provided';
   const year = document.getElementById('year').value || 'Not provided';
   const aiFamiliarity = document.getElementById('aiFamiliarity').value || 'Not provided';
   const policyAttitude = document.getElementById('policyAttitude').value || 'Not provided';
-  const original = document.getElementById('originalAnalysis').value.trim();
-  const originalWC = original.split(/\s+/).length;
-  const revisedWC = revised.split(/\s+/).length;
-  const chatTurns = Math.floor(chatHistory.length / 2);
+  const finalWC = finalAnalysis.trim().split(/\s+/).filter(Boolean).length;
+  const totalChatTurns = clauseChatHistories.reduce(
+    (sum, h) => sum + h.filter(m => m.role === 'user').length,
+    0
+  );
 
   const payload = {
     major,
     year,
     ai_familiarity: aiFamiliarity,
     policy_attitude: policyAttitude,
-    original_analysis: original,
-    revised_analysis: revised,
-    original_word_count: originalWC,
-    revised_word_count: revisedWC,
-    chat_turns: chatTurns,
-    chat_history: chatHistory
+    original_analysis: finalAnalysis,
+    revised_analysis: finalAnalysis,
+    original_word_count: finalWC,
+    revised_word_count: finalWC,
+    chat_turns: totalChatTurns,
+    chat_history: CLAUSES.map((c, i) => ({
+      clause: c.label,
+      chat: clauseChatHistories[i]
+    }))
   };
 
   try {
@@ -1112,188 +1223,40 @@ async function submitFinal() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
+
     if (!res.ok) throw new Error('Server error');
-  } catch (err) {
+
+  } catch {
+    btn.disabled = false;
+    btn.textContent = 'Submit Analysis →';
     alert('Failed to save submission. Please check your connection and try again.');
     return;
   }
 
   document.getElementById('submissionSummary').innerHTML = `
     <strong>Submission Summary</strong><br><br>
-    Major: ${major}<br>
-    Year: ${year}<br>
-    AI familiarity: ${aiFamiliarity}<br>
-    Policy attitude: ${policyAttitude}<br>
-    Original analysis: ${originalWC} words<br>
-    Revised analysis: ${revisedWC} words<br>
-    AI feedback exchanges: ${chatTurns}<br>
+    Major: ${escapeHTML(major)}<br>
+    Year: ${escapeHTML(year)}<br>
+    AI familiarity: ${escapeHTML(aiFamiliarity)}<br>
+    Policy attitude: ${escapeHTML(policyAttitude)}<br>
+    Final analysis: ${finalWC} words<br>
+    AI chat messages sent: ${totalChatTurns}<br>
     Timestamp: ${new Date().toLocaleString()}
   `;
+
   goToStage(4);
 }
- /* =========================================================
-   CLAUSE WRITING AI CHAT
-========================================================= */
 
-let clauseWritingChatHistories = [[], [], []];
-let clauseChatting = false;
-
-function renderClauseWritingChat(index) {
-
-  const el = document.getElementById('clauseChatMessages');
-
-  const history = clauseWritingChatHistories[index];
-
-  if (!history.length) {
-
-    el.innerHTML = `
-      <div class="msg ai">
-        <div class="msg-avatar">AI</div>
-
-        <div class="msg-bubble">
-          Hi! I can help you understand this clause, think through the 5 dimensions, or improve your reasoning.
-        </div>
-      </div>
-    `;
-
-    return;
-  }
-
-  el.innerHTML = history.map(m => `
-
-    <div class="msg ${m.role === 'user' ? 'user' : 'ai'}">
-
-      <div class="msg-avatar">
-        ${m.role === 'user' ? 'You' : 'AI'}
-      </div>
-
-      <div class="msg-bubble">
-        ${m.content
-          .replace(/&/g,'&amp;')
-          .replace(/</g,'&lt;')
-          .replace(/>/g,'&gt;')
-          .replace(/\n/g,'<br>')}
-      </div>
-
-    </div>
-
-  `).join('');
-
-  el.scrollTop = el.scrollHeight;
+// ── Utilities ────────────────────────────────────────────────────────────────
+function escapeHTML(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
-async function sendClauseChat() {
-
-  if (clauseChatting) return;
-
-  const input = document.getElementById('clauseChatInput');
-
-  const msg = input.value.trim();
-
-  if (!msg) return;
-
-  const index = currentClauseIndex;
-
-  const clause = CLAUSES[index];
-
-  const currentDraft =
-    document.getElementById('clauseAnalysisInput').value.trim();
-
-  input.value = '';
-
-  clauseWritingChatHistories[index].push({
-    role: 'user',
-    content: msg
-  });
-
-  renderClauseWritingChat(index);
-
-  clauseChatting = true;
-
-  document.getElementById('clauseChatSendBtn').disabled = true;
-
-  try {
-
-    const response = await fetch('/api/chat', {
-
-      method: 'POST',
-
-      headers: {
-        'Content-Type': 'application/json'
-      },
-
-      body: JSON.stringify({
-
-        system: `
-You are an AI writing assistant helping students analyse university AI policies.
-
-The student is currently analysing:
-${clause.focus}
-
-Your rules:
-- Help the student understand the clause.
-- Give hints, guiding questions, and short examples.
-- Encourage critical thinking.
-- NEVER write the full answer for the student.
-- NEVER generate a full submission paragraph.
-- Keep responses concise and helpful.
-
-Current student draft:
-${currentDraft || 'The student has not written anything yet.'}
-        `,
-
-        messages: clauseWritingChatHistories[index],
-
-        max_tokens: 500
-
-      })
-
-    });
-
-    const data = await response.json();
-
-    const reply =
-      data.content?.[0]?.text?.trim()
-      || 'Sorry, I could not respond right now.';
-
-    clauseWritingChatHistories[index].push({
-      role: 'assistant',
-      content: reply
-    });
-
-    renderClauseWritingChat(index);
-
-  } catch {
-
-    clauseWritingChatHistories[index].push({
-      role: 'assistant',
-      content: 'Sorry, there was an error connecting to the AI assistant.'
-    });
-
-    renderClauseWritingChat(index);
-  }
-
-  clauseChatting = false;
-
-  document.getElementById('clauseChatSendBtn').disabled = false;
-}
-
-function handleClauseChatKey(e) {
-
-  if (e.key === 'Enter' && !e.shiftKey) {
-
-    e.preventDefault();
-
-    sendClauseChat();
-  }
-}
-
-function quickClauseAsk(question) {
-
-  document.getElementById('clauseChatInput').value = question;
-
-  sendClauseChat();
-}
 </script>
 </body>
 </html>
