@@ -4,7 +4,7 @@ const fetch = require('node-fetch');
 const cors = require('cors');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 const GROQ_MODEL = 'llama-3.3-70b-versatile';
