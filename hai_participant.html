@@ -659,116 +659,161 @@
     </div>
   </div>
 
-  <!-- Stage 1: Read & Analyse (combined) -->
-  <div class="stage" id="stage-1">
-    <div class="card">
-      <div class="card-title">Read & Analyse</div>
-      <div class="card-sub">Read the policy on the left, then write your analysis on the right. You can refer back to the policy at any time.</div>
+<!-- Stage 1: Read & Analyse -->
+<div class="stage" id="stage-1">
+  <div class="card">
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:start;margin-bottom:1rem;">
-
-        <!-- Left: Policy -->
-        <div>
-          <div class="compare-col-label label-original" style="margin-bottom:8px;">Policy</div>
-          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1rem;margin-bottom:0.75rem;font-size:12.5px;color:var(--text2);line-height:1.65;">
-            <strong style="color:var(--text);display:block;margin-bottom:3px;">Policy Background</strong>
-            The following policy clauses are taken directly from the Yonsei University Guidelines for Students on the Use of Generative AI, used in this study to explore how students interpret AI-related academic policies.
-          </div>
-          <div class="policy-block" style="margin-bottom:0;">
-            <h3>Yonsei University — Guidelines for Students on the Use of Generative AI</h3>
-            <p><strong>Clause 2. Verify accuracy and reliability of AI outputs.</strong> Due to its inherent nature, generative AI may produce false or misleading information. It is essential to critically verify and fact-check its outputs.</p>
-            <p>● Understand the limitations and potential drawbacks of generative AI, and evaluate its outputs with a critical and questioning mindset.</p>
-            <p>● Always keep your learning objectives in mind. Emphasise self-directed learning and inquiry, and be mindful not to become overly dependent on AI tools.</p>
-            <p><strong>Clause 3. Act ethically and remain aware of potential biases in AI outputs.</strong> Although generative AI is designed to reject unethical prompts, indirect or rephrased questions may still lead to the generation of inappropriate or unethical content. Users should exercise caution, discretion, and a strong sense of responsibility.</p>
-            <p>● When AI is trained on biased or discriminatory data, it may produce skewed or harmful outputs that could inadvertently influence your academic work or research outcomes. Always remain vigilant and evaluate AI-generated content with critical scrutiny.</p>
-            <p><strong>Clause 5. Always provide proper citation when using generative AI tools.</strong> If students use generative AI in their academic work, they must provide clear and accurate citations. Submitting AI-generated content without proper attribution or using it without modification may be considered plagiarism or academic misconduct.</p>
-            <p>● Provide clear citations including the specific model used, the prompt entered, and the name of the platform.</p>
-            <p><em>Example (APA):</em> OpenAI. (Year). ChatGPT (Month Day version) [Large language model]. https://chat.openai.com</p>
-            <p><em>Example (MLA):</em> "Exact prompt you used" prompt. ChatGPT, Day Month version, OpenAI, Day Month Year, chat.openai.com.</p>
-          </div>
-        </div>
-
-        <!-- Right: Analysis -->
-        <div>
-          <div class="compare-col-label label-revised" style="margin-bottom:8px;">Your Analysis</div>
-          <div class="prompt-guide">
-            <h4>Address these 5 dimensions:</h4>
-            <ol>
-              <li><strong>Behavioral Impact</strong> — How might this policy change how students work?</li>
-              <li><strong>Decision-Making</strong> — How does it affect decisions about using AI?</li>
-              <li><strong>Well-being</strong> — What emotional or psychological effects might it have?</li>
-              <li><strong>Benefits</strong> — What are the genuine benefits for students?</li>
-              <li><strong>Potential Drawbacks</strong> — What are realistic concerns or limitations?</li>
-            </ol>
-          </div>
-          <textarea id="originalAnalysis" placeholder="Write your analysis here. Consider all 5 dimensions above..." oninput="updateWC('originalAnalysis','wc1')" style="min-height:260px;"></textarea>
-          <div class="wc" id="wc1">0 words</div>
-        </div>
-
-      </div>
-
-      <div class="btn-row">
-        <button class="btn btn-secondary" onclick="goToStage(0)">← Back</button>
-        <button class="btn btn-primary" id="submitAnalysisBtn" onclick="submitAnalysis()" disabled>Submit for AI Feedback →</button>
-      </div>
+    <div class="clause-step-label" id="readStepLabel">
+      Clause 1 of 3 — Read & Analyse
     </div>
-  </div>
 
-  <!-- Stage 2: AI Feedback Chat -->
-  <div class="stage" id="stage-2">
-    <div class="card">
-      <div class="card-title">AI Feedback Session</div>
-      <div class="card-sub">The AI assistant has reviewed your analysis. Read its feedback carefully, then ask follow-up questions if needed. When you feel ready, proceed to revise your analysis.</div>
-
-      <div class="chat-box">
-        <div class="chat-messages" id="chatMessages"></div>
-        <div class="chat-input-area">
-          <textarea class="chat-input" id="chatInput" placeholder="Ask a follow-up question..." rows="1" onkeydown="handleChatKey(event)"></textarea>
-          <button class="chat-send" id="chatSendBtn" onclick="sendChatMessage()">Send</button>
-        </div>
-      </div>
-
-      <div class="suggestion-cards" id="suggestionCards"></div>
-
-      <div class="feedback-tags">
-        <button class="ftag" onclick="quickAsk('Can you give me an example of what a stronger response to dimension 3 (well-being) might look like?')">Example for well-being dimension</button>
-        <button class="ftag" onclick="quickAsk('Which dimension in my analysis is weakest and how can I improve it?')">Which dimension needs the most work?</button>
-        <button class="ftag" onclick="quickAsk('Are there any student perspectives or edge cases I missed that would make my analysis more realistic?')">Missing student perspectives?</button>
-        <button class="ftag" onclick="quickAsk('How can I make my analysis feel more grounded in lived student experience?')">How to add lived experience?</button>
-      </div>
-
-      <div class="btn-row" style="margin-top:1.25rem">
-        <button class="btn btn-secondary" onclick="goToStage(1)">← Back to Analysis</button>
-        <button class="btn btn-primary" onclick="goToStage(3)">Proceed to Revision →</button>
-      </div>
+    <div class="card-title" id="readClauseTitle">
+      Read & Analyse — Clause 2
     </div>
-  </div>
 
-  <!-- Stage 3: Revise -->
-  <div class="stage" id="stage-3">
-    <div class="card">
-      <div class="card-title">Revise Your Analysis</div>
-      <div class="card-sub">Based on the AI feedback, revise your analysis. Your original version is shown on the left for reference. You do not have to accept every suggestion — revise in a way that reflects your own judgment.</div>
-
-      <div class="compare-grid" style="margin-bottom:1rem">
-        <div>
-          <div class="compare-col-label label-original">Original</div>
-          <div class="text-display" id="originalDisplay"></div>
-        </div>
-        <div>
-          <div class="compare-col-label label-revised">Revised</div>
-          <textarea id="revisedAnalysis" style="min-height:200px;" placeholder="Write your revised analysis here..." oninput="updateWC('revisedAnalysis','wc2')"></textarea>
-          <div class="wc" id="wc2">0 words</div>
-        </div>
-      </div>
-
-      <div class="btn-row">
-        <button class="btn btn-secondary" onclick="goToStage(2)">← Back to Feedback</button>
-        <button class="btn btn-accent" onclick="submitFinal()">Submit Both Versions ✓</button>
-      </div>
+    <div class="card-sub">
+      Read the clause carefully, then write your analysis while using the AI assistant if needed.
     </div>
-  </div>
 
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:start;margin-bottom:1rem;">
+
+      <!-- LEFT: POLICY -->
+      <div>
+
+        <div class="compare-col-label label-original" style="margin-bottom:8px;">
+          Policy Clause
+        </div>
+
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1rem;margin-bottom:0.75rem;font-size:12.5px;color:var(--text2);line-height:1.65;">
+          <strong style="color:var(--text);display:block;margin-bottom:3px;">
+            Policy Background
+          </strong>
+          Taken from the Yonsei University Guidelines for Students on the Use of Generative AI.
+        </div>
+
+        <div class="policy-block" id="readPolicyContent"></div>
+
+      </div>
+
+      <!-- RIGHT: ANALYSIS + AI CHAT -->
+      <div>
+
+        <div class="compare-col-label label-revised" style="margin-bottom:8px;">
+          Your Analysis
+        </div>
+
+        <div class="prompt-guide">
+          <h4>Consider these dimensions:</h4>
+
+          <ol id="dimensionsList"></ol>
+        </div>
+
+        <textarea
+          id="clauseAnalysisInput"
+          placeholder="Write your analysis here..."
+          oninput="updateReadWC()"
+          style="min-height:220px;"
+        ></textarea>
+
+        <div class="wc" id="readWC">0 words</div>
+
+        <!-- AI CHAT PANEL -->
+        <div class="chat-box" style="margin-top:1rem;">
+
+          <div style="padding:0.85rem 1rem;border-bottom:1px solid var(--border);background:var(--surface2);">
+            <div style="font-size:13px;font-weight:600;color:var(--text);">
+              AI Writing Assistant
+            </div>
+
+            <div style="font-size:12px;color:var(--text2);line-height:1.5;">
+              Ask questions while writing. The AI will guide your thinking, not write the full answer for you.
+            </div>
+          </div>
+
+          <div class="chat-messages" id="clauseChatMessages" style="max-height:260px;">
+
+            <div class="msg ai">
+              <div class="msg-avatar">AI</div>
+
+              <div class="msg-bubble">
+                Hi! I can help you understand this clause, think through the 5 dimensions, or improve your reasoning.
+              </div>
+            </div>
+
+          </div>
+
+          <div class="chat-input-area">
+
+            <textarea
+              class="chat-input"
+              id="clauseChatInput"
+              placeholder="Ask about this clause..."
+              rows="1"
+              onkeydown="handleClauseChatKey(event)"
+            ></textarea>
+
+            <button
+              class="chat-send"
+              id="clauseChatSendBtn"
+              onclick="sendClauseChat()"
+            >
+              Send
+            </button>
+
+          </div>
+
+        </div>
+
+        <!-- QUICK PROMPTS -->
+        <div class="feedback-tags" style="margin-top:0.75rem;">
+
+          <button class="ftag" onclick="quickClauseAsk('Can you explain this clause in simpler terms?')">
+            Explain clause
+          </button>
+
+          <button class="ftag" onclick="quickClauseAsk('What are possible benefits of this clause?')">
+            Benefits ideas
+          </button>
+
+          <button class="ftag" onclick="quickClauseAsk('What are possible drawbacks of this clause?')">
+            Drawbacks ideas
+          </button>
+
+          <button class="ftag" onclick="quickClauseAsk('What does the well-being dimension mean here?')">
+            Well-being help
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="btn-row">
+
+      <button
+        class="btn btn-secondary"
+        id="readBackBtn"
+        onclick="prevReadClause()"
+      >
+        ← Back
+      </button>
+
+      <button
+        class="btn btn-primary"
+        id="readNextBtn"
+        onclick="nextReadClause()"
+        disabled
+      >
+        Next Clause →
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+ 
   <!-- Stage 4: Done -->
   <div class="stage" id="stage-4">
     <div class="card" style="text-align:center;padding:2.5rem 1.5rem;">
@@ -1085,6 +1130,169 @@ async function submitFinal() {
     Timestamp: ${new Date().toLocaleString()}
   `;
   goToStage(4);
+}
+ /* =========================================================
+   CLAUSE WRITING AI CHAT
+========================================================= */
+
+let clauseWritingChatHistories = [[], [], []];
+let clauseChatting = false;
+
+function renderClauseWritingChat(index) {
+
+  const el = document.getElementById('clauseChatMessages');
+
+  const history = clauseWritingChatHistories[index];
+
+  if (!history.length) {
+
+    el.innerHTML = `
+      <div class="msg ai">
+        <div class="msg-avatar">AI</div>
+
+        <div class="msg-bubble">
+          Hi! I can help you understand this clause, think through the 5 dimensions, or improve your reasoning.
+        </div>
+      </div>
+    `;
+
+    return;
+  }
+
+  el.innerHTML = history.map(m => `
+
+    <div class="msg ${m.role === 'user' ? 'user' : 'ai'}">
+
+      <div class="msg-avatar">
+        ${m.role === 'user' ? 'You' : 'AI'}
+      </div>
+
+      <div class="msg-bubble">
+        ${m.content
+          .replace(/&/g,'&amp;')
+          .replace(/</g,'&lt;')
+          .replace(/>/g,'&gt;')
+          .replace(/\n/g,'<br>')}
+      </div>
+
+    </div>
+
+  `).join('');
+
+  el.scrollTop = el.scrollHeight;
+}
+
+async function sendClauseChat() {
+
+  if (clauseChatting) return;
+
+  const input = document.getElementById('clauseChatInput');
+
+  const msg = input.value.trim();
+
+  if (!msg) return;
+
+  const index = currentClauseIndex;
+
+  const clause = CLAUSES[index];
+
+  const currentDraft =
+    document.getElementById('clauseAnalysisInput').value.trim();
+
+  input.value = '';
+
+  clauseWritingChatHistories[index].push({
+    role: 'user',
+    content: msg
+  });
+
+  renderClauseWritingChat(index);
+
+  clauseChatting = true;
+
+  document.getElementById('clauseChatSendBtn').disabled = true;
+
+  try {
+
+    const response = await fetch('/api/chat', {
+
+      method: 'POST',
+
+      headers: {
+        'Content-Type': 'application/json'
+      },
+
+      body: JSON.stringify({
+
+        system: `
+You are an AI writing assistant helping students analyse university AI policies.
+
+The student is currently analysing:
+${clause.focus}
+
+Your rules:
+- Help the student understand the clause.
+- Give hints, guiding questions, and short examples.
+- Encourage critical thinking.
+- NEVER write the full answer for the student.
+- NEVER generate a full submission paragraph.
+- Keep responses concise and helpful.
+
+Current student draft:
+${currentDraft || 'The student has not written anything yet.'}
+        `,
+
+        messages: clauseWritingChatHistories[index],
+
+        max_tokens: 500
+
+      })
+
+    });
+
+    const data = await response.json();
+
+    const reply =
+      data.content?.[0]?.text?.trim()
+      || 'Sorry, I could not respond right now.';
+
+    clauseWritingChatHistories[index].push({
+      role: 'assistant',
+      content: reply
+    });
+
+    renderClauseWritingChat(index);
+
+  } catch {
+
+    clauseWritingChatHistories[index].push({
+      role: 'assistant',
+      content: 'Sorry, there was an error connecting to the AI assistant.'
+    });
+
+    renderClauseWritingChat(index);
+  }
+
+  clauseChatting = false;
+
+  document.getElementById('clauseChatSendBtn').disabled = false;
+}
+
+function handleClauseChatKey(e) {
+
+  if (e.key === 'Enter' && !e.shiftKey) {
+
+    e.preventDefault();
+
+    sendClauseChat();
+  }
+}
+
+function quickClauseAsk(question) {
+
+  document.getElementById('clauseChatInput').value = question;
+
+  sendClauseChat();
 }
 </script>
 </body>
