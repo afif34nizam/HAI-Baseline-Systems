@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goal Diggers — Policy Analysis Study</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F6F4EF;
+    --surface: #FFFFFF;
+    --surface2: #F0EDE6;
+    --border: #DDD9CF;
+    --border2: #C8C3B5;
+    --text: #1A1916;
+    --text2: #6B6760;
+    --text3: #9E9A92;
+    --accent: #2D6A4F;
+    --accent-light: #E8F4EE;
+    --accent2: #B7410E;
+    --accent2-light: #FAF0EB;
+    --blue: #1A4A7A;
+    --blue-light: #EBF2FA;
+    --step-done: #2D6A4F;
+    --step-active: #1A1916;
+    --step-muted: #C8C3B5;
+    --radius: 10px;
+    --font-serif: 'Instrument Serif', Georgia, serif;
+    --font-sans: 'DM Sans', system-ui, sans-serif;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* Header */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-logo {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    color: var(--text);
+    letter-spacing: 0.01em;
+  }
+  .header-logo span { color: var(--accent); }
+  .header-tag {
+    font-size: 12px;
+    color: var(--text3);
+    background: var(--surface2);
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    height: 44px;
+    overflow-x: auto;
+  }
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 1rem 0 0;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: opacity 0.2s;
+  }
+  .step:first-child { padding-left: 0; }
+  .step-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+    border: 1.5px solid var(--step-muted);
+    color: var(--step-muted);
+    transition: all 0.3s;
+    flex-shrink: 0;
+  }
+  .step-label { font-size: 13px; color: var(--text3); font-weight: 500; transition: color 0.3s; }
+  .step.done .step-num { background: var(--step-done); border-color: var(--step-done); color: #fff; }
+  .step.done .step-label { color: var(--step-done); }
+  .step.active .step-num { border-color: var(--step-active); color: var(--step-active); background: transparent; }
+  .step.active .step-label { color: var(--step-active); }
+  .step-divider { width: 24px; height: 1px; background: var(--border); margin: 0 4px; flex-shrink: 0; }
+
+  /* Layout */
+  .container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  /* Stage panels */
+  .stage { display: none; animation: fadeIn 0.35s ease; }
+  .stage.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .card-title {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+  .card-sub {
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 1rem;
+    line-height: 1.55;
+  }
+
+  /* Policy block */
+  .policy-block {
+    background: var(--blue-light);
+    border: 1px solid #C5D9EF;
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .policy-block h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.75rem;
+  }
+  .policy-block p {
+    font-size: 14px;
+    color: #1A3A5C;
+    line-height: 1.65;
+    margin-bottom: 0.6rem;
+  }
+  .policy-block p:last-child { margin-bottom: 0; }
+
+  /* Prompt guide */
+  .prompt-guide {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .prompt-guide h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+  .prompt-guide ol {
+    font-size: 13px;
+    color: var(--text2);
+    padding-left: 1.2rem;
+    line-height: 1.7;
+  }
+
+  /* Textarea */
+  textarea {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--text);
+    background: var(--surface);
+    resize: vertical;
+    min-height: 180px;
+    outline: none;
+    transition: border-color 0.2s;
+    line-height: 1.65;
+  }
+  textarea:focus { border-color: var(--accent); }
+  textarea::placeholder { color: var(--text3); }
+
+  /* Word count */
+  .wc { font-size: 12px; color: var(--text3); margin-top: 6px; text-align: right; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 9px 20px;
+    border-radius: 8px;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.18s;
+  }
+  .btn-primary {
+    background: var(--text);
+    color: #fff;
+  }
+  .btn-primary:hover { background: #333; }
+  .btn-primary:disabled { background: var(--border2); cursor: not-allowed; }
+  .btn-secondary {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border2);
+  }
+  .btn-secondary:hover { background: var(--surface2); }
+  .btn-accent {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-accent:hover { background: #235740; }
+
+  .btn-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 1rem; }
+
+  /* Chat */
+  .chat-box {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .chat-messages {
+    padding: 1.25rem;
+    max-height: 420px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .msg {
+    display: flex;
+    gap: 10px;
+    animation: fadeIn 0.25s ease;
+  }
+  .msg.user { flex-direction: row-reverse; }
+  .msg-avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .msg.ai .msg-avatar { background: var(--accent-light); color: var(--accent); }
+  .msg.user .msg-avatar { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+  .msg-bubble {
+    max-width: 80%;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    font-size: 13.5px;
+    line-height: 1.65;
+  }
+  .msg.ai .msg-bubble { background: var(--surface2); border: 1px solid var(--border); color: var(--text); border-top-left-radius: 2px; }
+  .msg.user .msg-bubble { background: var(--text); color: #fff; border-top-right-radius: 2px; }
+
+  .typing-indicator { display: flex; gap: 5px; padding: 4px 0; }
+  .typing-indicator span {
+    width: 7px; height: 7px;
+    background: var(--text3);
+    border-radius: 50%;
+    animation: bounce 1.2s infinite;
+  }
+  .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+
+  .chat-input-area {
+    border-top: 1px solid var(--border);
+    padding: 0.75rem 1rem;
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+  }
+  .chat-input {
+    flex: 1;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    color: var(--text);
+    background: var(--bg);
+    resize: none;
+    outline: none;
+    min-height: 38px;
+    max-height: 120px;
+    line-height: 1.5;
+    transition: border-color 0.2s;
+  }
+  .chat-input:focus { border-color: var(--accent); }
+  .chat-send {
+    padding: 8px 14px;
+    background: var(--text);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    transition: background 0.18s;
+    white-space: nowrap;
+  }
+  .chat-send:hover { background: #333; }
+  .chat-send:disabled { background: var(--border2); cursor: not-allowed; }
+
+  /* Compare view */
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 640px) { .compare-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 700px) { #stage-1 .card > div[style*="grid"] { grid-template-columns: 1fr !important; } }
+  .compare-col-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: inline-block;
+  }
+  .label-original { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+  .label-revised { background: var(--accent-light); color: var(--accent); border: 1px solid #A8D5BC; }
+
+  .text-display {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 200px;
+    white-space: pre-wrap;
+  }
+
+  /* Success */
+  .success-icon {
+    width: 56px; height: 56px;
+    background: var(--accent-light);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 24px;
+  }
+  .success-title {
+    font-family: var(--font-serif);
+    font-size: 1.6rem;
+    text-align: center;
+    margin-bottom: 0.4rem;
+  }
+  .success-sub { text-align: center; color: var(--text2); font-size: 14px; margin-bottom: 1.5rem; }
+
+  /* Intro */
+  .intro-hero {
+    text-align: center;
+    padding: 2.5rem 1rem 1.5rem;
+  }
+  .intro-hero h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+  }
+  .intro-hero p { font-size: 15px; color: var(--text2); max-width: 540px; margin: 0 auto 1.5rem; }
+  .intro-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+  .intro-step-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    text-align: left;
+  }
+  .intro-step-num {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text2);
+    margin-bottom: 8px;
+  }
+  .intro-step-card h4 { font-size: 13.5px; font-weight: 600; margin-bottom: 4px; }
+  .intro-step-card p { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+  .info-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  @media (max-width: 500px) { .info-row { grid-template-columns: 1fr; } }
+  .info-field label { display: block; font-size: 12px; color: var(--text2); margin-bottom: 4px; font-weight: 500; }
+  .info-field input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--text);
+    background: var(--surface);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .info-field input:focus { border-color: var(--accent); }
+  .info-field select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--text);
+    background: var(--surface);
+    outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B6760' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    cursor: pointer;
+  }
+  .info-field select:focus { border-color: var(--accent); }
+
+  .notice {
+    font-size: 12px;
+    color: var(--text3);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-top: 0.75rem;
+  }
+
+  /* Separator */
+  .sep { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+  /* Scrollbar */
+  .chat-messages::-webkit-scrollbar { width: 4px; }
+  .chat-messages::-webkit-scrollbar-track { background: transparent; }
+  .chat-messages::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+  /* Feedback tags */
+  .feedback-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .ftag {
+    font-size: 11.5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text2);
+    transition: all 0.15s;
+    font-family: var(--font-sans);
+  }
+  .ftag:hover { background: var(--surface2); border-color: var(--border2); color: var(--text); }
+
+  /* Suggestion cards */
+  .suggestion-cards { display: none; margin-top: 1.25rem; }
+  .suggestion-cards-title {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text2);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .suggestion-cards-title::before {
+    content: '';
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .suggestion-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--accent-light);
+    border: 1px solid #A8D5BC;
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    margin-bottom: 0.6rem;
+    animation: fadeIn 0.25s ease;
+    transition: opacity 0.2s;
+  }
+  .suggestion-card.applied {
+    opacity: 0.5;
+    background: var(--surface2);
+    border-color: var(--border);
+  }
+  .suggestion-index {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .suggestion-card.applied .suggestion-index { background: var(--border2); }
+  .suggestion-text { flex: 1; font-size: 13px; color: var(--text); line-height: 1.65; }
+  .suggestion-apply {
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    transition: all 0.18s;
+  }
+  .suggestion-apply:hover { background: #235740; }
+  .suggestion-apply:disabled { background: var(--step-done); cursor: default; opacity: 0.7; }
+</style>
+</head>
+<body>
+
+
+<div class="progress-bar" id="progressBar">
+  <div class="step active" data-stage="0">
+    <div class="step-num">1</div>
+    <div class="step-label">Welcome</div>
+  </div>
+  <div class="step-divider"></div>
+  <div class="step" data-stage="1">
+    <div class="step-num">2</div>
+    <div class="step-label">Read & Analyse</div>
+  </div>
+  <div class="step-divider"></div>
+  <div class="step" data-stage="2">
+    <div class="step-num">3</div>
+    <div class="step-label">AI Feedback</div>
+  </div>
+  <div class="step-divider"></div>
+  <div class="step" data-stage="3">
+    <div class="step-num">4</div>
+    <div class="step-label">Revise</div>
+  </div>
+  <div class="step-divider"></div>
+  <div class="step" data-stage="4">
+    <div class="step-num">5</div>
+    <div class="step-label">Done</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Stage 0: Welcome -->
+  <div class="stage active" id="stage-0">
+    <div class="intro-hero">
+      <h1>Policy Analysis Study</h1>
+      <p>You will analyze a university AI usage policy, get structured feedback from an AI assistant, and revise your analysis. The whole process takes about 20–30 minutes.</p>
+    </div>
+    <div class="intro-steps">
+      <div class="intro-step-card">
+        <div class="intro-step-num">1</div>
+        <h4>Read & Analyse</h4>
+        <p>Read the policy and write your analysis side by side — refer back anytime.</p>
+      </div>
+      <div class="intro-step-card">
+        <div class="intro-step-num">2</div>
+        <h4>Get AI Feedback</h4>
+        <p>An AI assistant will review your analysis and suggest improvements.</p>
+      </div>
+      <div class="intro-step-card">
+        <div class="intro-step-num">3</div>
+        <h4>Revise & Submit</h4>
+        <p>Revise your analysis based on the feedback, then submit both versions.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Before you begin</div>
+      <div class="card-sub">Please fill in your details. Your responses will be anonymized before evaluation.</div>
+      <div class="info-row">
+        <div class="info-field">
+          <label>Major</label>
+          <input type="text" id="major" placeholder="e.g. Computer Science">
+        </div>
+        <div class="info-field">
+          <label>Year</label>
+          <select id="year">
+            <option value="" disabled selected>Select one…</option>
+            <option>Year 1</option>
+            <option>Year 2</option>
+            <option>Year 3</option>
+            <option>Year 4</option>
+            <option>Postgraduate / Masters</option>
+            <option>PhD</option>
+          </select>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-field">
+          <label>Familiarity with AI tools</label>
+          <select id="aiFamiliarity">
+            <option value="" disabled selected>Select one…</option>
+            <option>Never used AI tools</option>
+            <option>Occasionally (a few times)</option>
+            <option>Regularly (weekly use)</option>
+            <option>Daily / power user</option>
+          </select>
+        </div>
+        <div class="info-field">
+          <label>General attitude toward university policies</label>
+          <select id="policyAttitude">
+            <option value="" disabled selected>Select one…</option>
+            <option>Strongly supportive</option>
+            <option>Somewhat supportive</option>
+            <option>Neutral</option>
+            <option>Somewhat skeptical</option>
+            <option>Against</option>
+          </select>
+        </div>
+      </div>
+      <div class="notice">Your data is collected only for research purposes. Analyses will be anonymized before being evaluated by other participants.</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="startBtn" onclick="goToStage(1)" disabled>Start Study →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage 1: Read & Analyse (combined) -->
+  <div class="stage" id="stage-1">
+    <div class="card">
+      <div class="card-title">Read & Analyse</div>
+      <div class="card-sub">Read the policy on the left, then write your analysis on the right. You can refer back to the policy at any time.</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:start;margin-bottom:1rem;">
+
+        <!-- Left: Policy -->
+        <div>
+          <div class="compare-col-label label-original" style="margin-bottom:8px;">Policy</div>
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.85rem 1rem;margin-bottom:0.75rem;font-size:12.5px;color:var(--text2);line-height:1.65;">
+            <strong style="color:var(--text);display:block;margin-bottom:3px;">Policy Background</strong>
+            The following policy clauses are taken directly from the Yonsei University Guidelines for Students on the Use of Generative AI, used in this study to explore how students interpret AI-related academic policies.
+          </div>
+          <div class="policy-block" style="margin-bottom:0;">
+            <h3>Yonsei University — Guidelines for Students on the Use of Generative AI</h3>
+            <p><strong>Clause 2. Verify accuracy and reliability of AI outputs.</strong> Due to its inherent nature, generative AI may produce false or misleading information. It is essential to critically verify and fact-check its outputs.</p>
+            <p>● Understand the limitations and potential drawbacks of generative AI, and evaluate its outputs with a critical and questioning mindset.</p>
+            <p>● Always keep your learning objectives in mind. Emphasise self-directed learning and inquiry, and be mindful not to become overly dependent on AI tools.</p>
+            <p><strong>Clause 3. Act ethically and remain aware of potential biases in AI outputs.</strong> Although generative AI is designed to reject unethical prompts, indirect or rephrased questions may still lead to the generation of inappropriate or unethical content. Users should exercise caution, discretion, and a strong sense of responsibility.</p>
+            <p>● When AI is trained on biased or discriminatory data, it may produce skewed or harmful outputs that could inadvertently influence your academic work or research outcomes. Always remain vigilant and evaluate AI-generated content with critical scrutiny.</p>
+            <p><strong>Clause 5. Always provide proper citation when using generative AI tools.</strong> If students use generative AI in their academic work, they must provide clear and accurate citations. Submitting AI-generated content without proper attribution or using it without modification may be considered plagiarism or academic misconduct.</p>
+            <p>● Provide clear citations including the specific model used, the prompt entered, and the name of the platform.</p>
+            <p><em>Example (APA):</em> OpenAI. (Year). ChatGPT (Month Day version) [Large language model]. https://chat.openai.com</p>
+            <p><em>Example (MLA):</em> "Exact prompt you used" prompt. ChatGPT, Day Month version, OpenAI, Day Month Year, chat.openai.com.</p>
+          </div>
+        </div>
+
+        <!-- Right: Analysis -->
+        <div>
+          <div class="compare-col-label label-revised" style="margin-bottom:8px;">Your Analysis</div>
+          <div class="prompt-guide">
+            <h4>Address these 5 dimensions:</h4>
+            <ol>
+              <li><strong>Behavioral Impact</strong> — How might this policy change how students work?</li>
+              <li><strong>Decision-Making</strong> — How does it affect decisions about using AI?</li>
+              <li><strong>Well-being</strong> — What emotional or psychological effects might it have?</li>
+              <li><strong>Benefits</strong> — What are the genuine benefits for students?</li>
+              <li><strong>Potential Drawbacks</strong> — What are realistic concerns or limitations?</li>
+            </ol>
+          </div>
+          <textarea id="originalAnalysis" placeholder="Write your analysis here. Consider all 5 dimensions above..." oninput="updateWC('originalAnalysis','wc1')" style="min-height:260px;"></textarea>
+          <div class="wc" id="wc1">0 words</div>
+        </div>
+
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goToStage(0)">← Back</button>
+        <button class="btn btn-primary" id="submitAnalysisBtn" onclick="submitAnalysis()" disabled>Submit for AI Feedback →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage 2: AI Feedback Chat -->
+  <div class="stage" id="stage-2">
+    <div class="card">
+      <div class="card-title">AI Feedback Session</div>
+      <div class="card-sub">The AI assistant has reviewed your analysis. Read its feedback carefully, then ask follow-up questions if needed. When you feel ready, proceed to revise your analysis.</div>
+
+      <div class="chat-box">
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-area">
+          <textarea class="chat-input" id="chatInput" placeholder="Ask a follow-up question..." rows="1" onkeydown="handleChatKey(event)"></textarea>
+          <button class="chat-send" id="chatSendBtn" onclick="sendChatMessage()">Send</button>
+        </div>
+      </div>
+
+      <div class="suggestion-cards" id="suggestionCards"></div>
+
+      <div class="feedback-tags">
+        <button class="ftag" onclick="quickAsk('Can you give me an example of what a stronger response to dimension 3 (well-being) might look like?')">Example for well-being dimension</button>
+        <button class="ftag" onclick="quickAsk('Which dimension in my analysis is weakest and how can I improve it?')">Which dimension needs the most work?</button>
+        <button class="ftag" onclick="quickAsk('Are there any student perspectives or edge cases I missed that would make my analysis more realistic?')">Missing student perspectives?</button>
+        <button class="ftag" onclick="quickAsk('How can I make my analysis feel more grounded in lived student experience?')">How to add lived experience?</button>
+      </div>
+
+      <div class="btn-row" style="margin-top:1.25rem">
+        <button class="btn btn-secondary" onclick="goToStage(1)">← Back to Analysis</button>
+        <button class="btn btn-primary" onclick="goToStage(3)">Proceed to Revision →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage 3: Revise -->
+  <div class="stage" id="stage-3">
+    <div class="card">
+      <div class="card-title">Revise Your Analysis</div>
+      <div class="card-sub">Based on the AI feedback, revise your analysis. Your original version is shown on the left for reference. You do not have to accept every suggestion — revise in a way that reflects your own judgment.</div>
+
+      <div class="compare-grid" style="margin-bottom:1rem">
+        <div>
+          <div class="compare-col-label label-original">Original</div>
+          <div class="text-display" id="originalDisplay"></div>
+        </div>
+        <div>
+          <div class="compare-col-label label-revised">Revised</div>
+          <textarea id="revisedAnalysis" style="min-height:200px;" placeholder="Write your revised analysis here..." oninput="updateWC('revisedAnalysis','wc2')"></textarea>
+          <div class="wc" id="wc2">0 words</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goToStage(2)">← Back to Feedback</button>
+        <button class="btn btn-accent" onclick="submitFinal()">Submit Both Versions ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage 4: Done -->
+  <div class="stage" id="stage-4">
+    <div class="card" style="text-align:center;padding:2.5rem 1.5rem;">
+      <div class="success-icon">✓</div>
+      <div class="success-title">Submission Complete</div>
+      <div class="success-sub">Thank you for participating in the Goal Diggers HAI Study. Both versions of your analysis have been recorded and anonymized.</div>
+      <hr class="sep">
+      <p style="font-size:14px;color:var(--text2);margin-bottom:1.5rem;">Your responses will be evaluated by other student participants in a blind study. Results will be used to compare the quality of human-only vs. AI-assisted policy analysis.</p>
+      <div id="submissionSummary" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;text-align:left;font-size:13px;color:var(--text2);margin-bottom:1.5rem;"></div>
+      <button class="btn btn-secondary" onclick="window.print()">Print / Save a Copy</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const POLICY_TEXT = `Yonsei University — Guidelines for Students on the Use of Generative AI
+
+Clause 2. Verify accuracy and reliability of AI outputs.
+Due to its inherent nature, generative AI may produce false or misleading information. It is essential to critically verify and fact-check its outputs.
+- Understand the limitations and potential drawbacks of generative AI, and evaluate its outputs with a critical and questioning mindset.
+- Always keep your learning objectives in mind. Emphasise self-directed learning and inquiry, and be mindful not to become overly dependent on AI tools.
+
+Clause 3. Act ethically and remain aware of potential biases in AI outputs.
+Although generative AI is designed to reject unethical prompts, indirect or rephrased questions may still lead to the generation of inappropriate or unethical content. Users should exercise caution, discretion, and a strong sense of responsibility.
+- When AI is trained on biased or discriminatory data, it may produce skewed or harmful outputs that could inadvertently influence your academic work or research outcomes. Always remain vigilant and evaluate AI-generated content with critical scrutiny.
+
+Clause 5. Always provide proper citation when using generative AI tools.
+If students use generative AI in their academic work, they must provide clear and accurate citations. Submitting AI-generated content without proper attribution or using it without modification may be considered plagiarism or academic misconduct.
+- Provide clear citations including the specific model used, the prompt entered, and the name of the platform.
+Example (APA): OpenAI. (Year). ChatGPT (Month Day version) [Large language model]. https://chat.openai.com
+Example (MLA): "Exact prompt you used" prompt. ChatGPT, Day Month version, OpenAI, Day Month Year, chat.openai.com.`;
+
+const SYSTEM_PROMPT = `You are an AI research assistant in a Human-AI Interaction (HAI) academic study. Your role is to provide structured, constructive feedback on a student's analysis of a university AI usage policy.
+
+The policy text is:
+${POLICY_TEXT}
+
+The student was asked to address 5 dimensions:
+1. Behavioral Impact — How might this policy change how students work on assignments?
+2. Decision-Making — How does it affect decisions students make about using AI?
+3. Well-being — What emotional or psychological effects might this policy have?
+4. Benefits — What are the genuine benefits of this policy for students?
+5. Potential Drawbacks — What are realistic concerns or limitations of this policy?
+
+When giving feedback:
+- Be specific and structured. Address each dimension the student covered.
+- Highlight what was done well (genuine strengths, not vague praise).
+- Identify what is missing or underdeveloped — especially missing student perspectives, edge cases, or lived-experience nuance.
+- Suggest 2–3 concrete improvements the student can make.
+- Be supportive but honest. Avoid being sycophantic.
+- Keep responses focused and under 350 words unless the student asks a specific follow-up question.
+- Do NOT rewrite the analysis for the student. Guide, don't replace.
+
+After every response, you MUST append a suggestions block formatted EXACTLY like this (no deviation):
+
+ACTIONABLE SUGGESTIONS:
+[1] Write a complete sentence or short paragraph (1–3 sentences) in the student's voice that they can directly insert into their revised analysis. Make it specific and substantive — not meta-advice, but actual content.
+[2] A second ready-to-insert sentence or paragraph addressing a different dimension or gap.
+[3] A third ready-to-insert sentence or paragraph.
+
+Rules for suggestions:
+- Write in first person from the student's perspective (e.g. "This policy may create anxiety among students who...")
+- Each suggestion must be self-contained and add real value when inserted into the analysis
+- Cover different dimensions or gaps than each other
+- Do not use bullet points inside a suggestion — write in prose`;
+
+let chatHistory = [];
+let isTyping = false;
+let currentStage = 0;
+
+function checkStartBtn() {
+  const major = document.getElementById('major').value.trim();
+  const year = document.getElementById('year').value;
+  const ai = document.getElementById('aiFamiliarity').value;
+  const policy = document.getElementById('policyAttitude').value;
+  document.getElementById('startBtn').disabled = !(major && year && ai && policy);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  ['major', 'year', 'aiFamiliarity', 'policyAttitude'].forEach(id => {
+    document.getElementById(id).addEventListener('change', checkStartBtn);
+    document.getElementById(id).addEventListener('input', checkStartBtn);
+  });
+});
+
+function goToStage(n) {
+  document.getElementById('stage-' + currentStage).classList.remove('active');
+  document.querySelectorAll('.step').forEach((s, i) => {
+    s.classList.remove('active', 'done');
+    if (i < n) s.classList.add('done');
+    else if (i === n) s.classList.add('active');
+  });
+  currentStage = n;
+  document.getElementById('stage-' + n).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (n === 2 && chatHistory.length === 0) {
+    startFeedback();
+  }
+  if (n === 3) {
+    document.getElementById('originalDisplay').textContent = document.getElementById('originalAnalysis').value;
+    updateWC('revisedAnalysis', 'wc2');
+  }
+}
+
+function updateWC(id, wcId) {
+  const val = document.getElementById(id).value.trim();
+  const count = val ? val.split(/\s+/).length : 0;
+  document.getElementById(wcId).textContent = count + ' word' + (count !== 1 ? 's' : '');
+  if (id === 'originalAnalysis') {
+    document.getElementById('submitAnalysisBtn').disabled = count < 50;
+  }
+}
+
+document.getElementById('originalAnalysis').addEventListener('input', () => {
+  updateWC('originalAnalysis', 'wc1');
+});
+
+function submitAnalysis() {
+  const text = document.getElementById('originalAnalysis').value.trim();
+  if (text.split(/\s+/).length < 50) {
+    alert('Please write at least 50 words before submitting.');
+    return;
+  }
+  // Pre-populate revision draft so applied suggestions append cleanly
+  document.getElementById('revisedAnalysis').value = text;
+  updateWC('revisedAnalysis', 'wc2');
+  goToStage(2);
+}
+
+function addMessage(role, content) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg ' + (role === 'user' ? 'user' : 'ai');
+  const initial = role === 'user' ? 'You' : 'AI';
+  div.innerHTML = `<div class="msg-avatar">${initial}</div><div class="msg-bubble">${content.replace(/\n/g,'<br>')}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showTyping() {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg ai';
+  div.id = 'typingMsg';
+  div.innerHTML = `<div class="msg-avatar">AI</div><div class="msg-bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function removeTyping() {
+  const t = document.getElementById('typingMsg');
+  if (t) t.remove();
+}
+
+async function callClaude(userMessage) {
+  chatHistory.push({ role: 'user', content: userMessage });
+  showTyping();
+  document.getElementById('chatSendBtn').disabled = true;
+  isTyping = true;
+
+  try {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: chatHistory
+      })
+    });
+    const data = await response.json();
+    const reply = data.content?.map(b => b.text || '').join('') || 'Sorry, I could not generate feedback at this time.';
+    removeTyping();
+    chatHistory.push({ role: 'assistant', content: reply });
+    const { displayText, suggestions } = parseResponse(reply);
+    addMessage('ai', displayText);
+    showSuggestionCards(suggestions);
+  } catch (err) {
+    removeTyping();
+    addMessage('ai', 'There was an error connecting to the AI service. Please check your connection and try again.');
+  }
+  document.getElementById('chatSendBtn').disabled = false;
+  isTyping = false;
+}
+
+async function startFeedback() {
+  const analysis = document.getElementById('originalAnalysis').value.trim();
+  const firstMsg = `Here is my analysis of the university AI usage policy:\n\n${analysis}\n\nPlease provide your structured feedback on my analysis.`;
+  await callClaude(firstMsg);
+}
+
+async function sendChatMessage() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg || isTyping) return;
+  input.value = '';
+  addMessage('user', msg);
+  await callClaude(msg);
+}
+
+function quickAsk(q) {
+  if (isTyping) return;
+  addMessage('user', q);
+  callClaude(q);
+}
+
+function handleChatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendChatMessage();
+  }
+}
+
+function parseResponse(text) {
+  const marker = 'ACTIONABLE SUGGESTIONS:';
+  const idx = text.indexOf(marker);
+  if (idx === -1) return { displayText: text, suggestions: [] };
+
+  const displayText = text.slice(0, idx).trim();
+  const suggBlock = text.slice(idx + marker.length);
+  const suggestions = [];
+  const matches = [...suggBlock.matchAll(/\[(\d+)\]([\s\S]+?)(?=\[\d+\]|$)/g)];
+  matches.forEach(m => {
+    const s = m[2].trim();
+    if (s) suggestions.push(s);
+  });
+  return { displayText, suggestions };
+}
+
+function showSuggestionCards(suggestions) {
+  const container = document.getElementById('suggestionCards');
+  if (!suggestions.length) { container.style.display = 'none'; return; }
+
+  container.style.display = 'block';
+  container.innerHTML = `<div class="suggestion-cards-title">Actionable suggestions — click to add directly to your revision draft</div>`;
+  window._suggestions = suggestions;
+
+  suggestions.forEach((s, i) => {
+    const card = document.createElement('div');
+    card.className = 'suggestion-card';
+    card.id = 'sc-' + i;
+    card.innerHTML = `
+      <div class="suggestion-index">${i + 1}</div>
+      <div class="suggestion-text">${s}</div>
+      <button class="suggestion-apply" onclick="applySuggestion(${i}, this)">+ Add to Draft</button>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function applySuggestion(index, btn) {
+  const s = window._suggestions[index];
+  const revised = document.getElementById('revisedAnalysis');
+  revised.value = revised.value.trim() + '\n\n' + s;
+  updateWC('revisedAnalysis', 'wc2');
+  btn.textContent = '✓ Added';
+  btn.disabled = true;
+  document.getElementById('sc-' + index).classList.add('applied');
+}
+
+async function submitFinal() {
+  const revised = document.getElementById('revisedAnalysis').value.trim();
+  if (revised.split(/\s+/).length < 50) {
+    alert('Please write a revised analysis of at least 50 words.');
+    return;
+  }
+
+  const major = document.getElementById('major').value || 'Not provided';
+  const year = document.getElementById('year').value || 'Not provided';
+  const aiFamiliarity = document.getElementById('aiFamiliarity').value || 'Not provided';
+  const policyAttitude = document.getElementById('policyAttitude').value || 'Not provided';
+  const original = document.getElementById('originalAnalysis').value.trim();
+  const originalWC = original.split(/\s+/).length;
+  const revisedWC = revised.split(/\s+/).length;
+  const chatTurns = Math.floor(chatHistory.length / 2);
+
+  const payload = {
+    major,
+    year,
+    ai_familiarity: aiFamiliarity,
+    policy_attitude: policyAttitude,
+    original_analysis: original,
+    revised_analysis: revised,
+    original_word_count: originalWC,
+    revised_word_count: revisedWC,
+    chat_turns: chatTurns,
+    chat_history: chatHistory
+  };
+
+  try {
+    const res = await fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('Server error');
+  } catch (err) {
+    alert('Failed to save submission. Please check your connection and try again.');
+    return;
+  }
+
+  document.getElementById('submissionSummary').innerHTML = `
+    <strong>Submission Summary</strong><br><br>
+    Major: ${major}<br>
+    Year: ${year}<br>
+    AI familiarity: ${aiFamiliarity}<br>
+    Policy attitude: ${policyAttitude}<br>
+    Original analysis: ${originalWC} words<br>
+    Revised analysis: ${revisedWC} words<br>
+    AI feedback exchanges: ${chatTurns}<br>
+    Timestamp: ${new Date().toLocaleString()}
+  `;
+  goToStage(4);
+}
+</script>
+</body>
+</html>
