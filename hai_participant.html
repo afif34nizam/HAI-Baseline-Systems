@@ -1092,19 +1092,26 @@ async function sendClauseChat() {
   document.getElementById('clauseChatSendBtn').disabled = true;
   showClauseTyping();
 
-  try {
-    const response = await fetch('/api/chat', {
+  const response = await fetch('/api/chat', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
 
   body: JSON.stringify({
-    system: You are a helpful AI assistant.
-    You can answer questions naturally, explain concepts, brainstorm ideas, and have open-ended conversations.
-    Be conversational, clear, and helpful.`,
+
+    system: `
+You are a helpful AI assistant.
+
+You can answer questions naturally, explain concepts, brainstorm ideas, and have open-ended conversations.
+
+Be conversational, clear, and helpful.
+    `,
+
     messages: clauseChatHistories[index],
+
     max_tokens: 500
-    })
-    });
+
+  })
+});
 
     const data = await response.json();
     const reply =
