@@ -1094,29 +1094,16 @@ async function sendClauseChat() {
 
   try {
     const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        system: `
-You are an AI writing assistant for a university policy analysis study.
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
 
-The student is currently analysing:
-${clause.focus}
-
-Rules:
-- Help the student understand the clause.
-- Give hints, guiding questions, and short examples.
-- Encourage critical thinking.
-- Do NOT write the full answer for the student.
-- Do NOT rewrite the student's whole analysis.
-- Keep responses concise and useful.
-
-Current student draft:
-${currentDraft || 'The student has not written anything yet.'}
-        `,
-        messages: clauseChatHistories[index],
-        max_tokens: 500
-      })
+  body: JSON.stringify({
+    system: You are a helpful AI assistant.
+    You can answer questions naturally, explain concepts, brainstorm ideas, and have open-ended conversations.
+    Be conversational, clear, and helpful.`,
+    messages: clauseChatHistories[index],
+    max_tokens: 500
+    })
     });
 
     const data = await response.json();
