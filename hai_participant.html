@@ -935,6 +935,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById(id).addEventListener('input', checkStartBtn);
   });
 
+  checkStartBtn();
   updateProgressBar();
 });
 
@@ -1092,26 +1093,32 @@ async function sendClauseChat() {
   document.getElementById('clauseChatSendBtn').disabled = true;
   showClauseTyping();
 
+try {
+
   const response = await fetch('/api/chat', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+    method: 'POST',
 
-  body: JSON.stringify({
+    headers: {
+      'Content-Type': 'application/json'
+    },
 
-    system: `
+    body: JSON.stringify({
+
+      system: `
 You are a helpful AI assistant.
 
 You can answer questions naturally, explain concepts, brainstorm ideas, and have open-ended conversations.
 
 Be conversational, clear, and helpful.
-    `,
+      `,
 
-    messages: clauseChatHistories[index],
+      messages: clauseChatHistories[index],
 
-    max_tokens: 500
+      max_tokens: 500
 
-  })
-});
+    })
+
+  });
 
     const data = await response.json();
     const reply =
