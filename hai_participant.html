@@ -658,11 +658,16 @@
   <div class="step-divider"></div>
   <div class="step">
     <div class="step-num">5</div>
-    <div class="step-label">Review & Submit</div>
+    <div class="step-label">Review</div>
   </div>
   <div class="step-divider"></div>
   <div class="step">
     <div class="step-num">6</div>
+    <div class="step-label">Survey</div>
+  </div>
+  <div class="step-divider"></div>
+  <div class="step">
+    <div class="step-num">7</div>
     <div class="step-label">Done</div>
   </div>
 </div>
@@ -824,13 +829,81 @@
       <div id="finalReviewContent"></div>
       <div class="btn-row" style="margin-top:1.5rem;justify-content:space-between;">
         <button class="btn btn-secondary" onclick="goBackToLastClause()">← Go Back &amp; Edit Last Clause</button>
-        <button class="btn btn-accent" id="finalSubmitBtn" onclick="submitFinal()">Submit Analysis →</button>
+        <button class="btn btn-accent" onclick="goToStage(4)">Continue to Survey →</button>
       </div>
     </div>
   </div>
 
-  <!-- Stage 4: Done -->
+
+  <!-- Stage 4: Final Survey -->
   <div class="stage" id="stage-4">
+    <div class="card">
+      <div class="card-title">Final Survey</div>
+      <div class="card-sub">Please answer these quick questions before submitting your analysis.</div>
+
+      <div class="info-row">
+        <div class="info-field">
+          <label>How helpful was the AI assistant?</label>
+          <select id="surveyHelpful" onchange="checkSurveyBtn()" oninput="checkSurveyBtn()">
+            <option value="" disabled selected>Select one…</option>
+            <option>Very helpful</option>
+            <option>Somewhat helpful</option>
+            <option>Neutral</option>
+            <option>Not very helpful</option>
+            <option>Not helpful at all</option>
+          </select>
+        </div>
+
+        <div class="info-field">
+          <label>Did the AI influence your final analysis?</label>
+          <select id="surveyInfluence" onchange="checkSurveyBtn()" oninput="checkSurveyBtn()">
+            <option value="" disabled selected>Select one…</option>
+            <option>A lot</option>
+            <option>Somewhat</option>
+            <option>A little</option>
+            <option>Not at all</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <div class="info-field">
+          <label>How confident are you in your final analysis?</label>
+          <select id="surveyConfidence" onchange="checkSurveyBtn()" oninput="checkSurveyBtn()">
+            <option value="" disabled selected>Select one…</option>
+            <option>Very confident</option>
+            <option>Somewhat confident</option>
+            <option>Neutral</option>
+            <option>Not very confident</option>
+            <option>Not confident at all</option>
+          </select>
+        </div>
+
+        <div class="info-field">
+          <label>Would you use this kind of AI assistant again?</label>
+          <select id="surveyUseAgain" onchange="checkSurveyBtn()" oninput="checkSurveyBtn()">
+            <option value="" disabled selected>Select one…</option>
+            <option>Yes</option>
+            <option>Maybe</option>
+            <option>No</option>
+          </select>
+        </div>
+      </div>
+
+      <label style="display:block;font-size:12px;color:var(--text2);margin-bottom:4px;font-weight:500;">
+        Any additional comments? <span style="color:var(--text3);font-weight:400;">(Optional)</span>
+      </label>
+      <textarea id="surveyComments" placeholder="Write your comments here..." style="min-height:120px;"></textarea>
+
+      <div class="btn-row" style="margin-top:1.5rem;justify-content:space-between;">
+        <button class="btn btn-secondary" onclick="goToStage(3)">← Back to Review</button>
+        <button class="btn btn-accent" id="finalSubmitBtn" onclick="submitFinal()" disabled>Submit Analysis →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage 5: Done -->
+  <div class="stage" id="stage-5">
     <div class="card" style="text-align:center;padding:2.5rem 1.5rem;">
       <div class="success-icon">✓</div>
       <div class="success-title">Submission Complete</div>
@@ -940,14 +1013,15 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ── Progress bar ─────────────────────────────────────────────────────────────
-// Steps: 0=Welcome, 1=Clause2, 2=Clause3, 3=Clause5, 4=Review&Submit, 5=Done
+// Steps: 0=Welcome, 1=Clause2, 2=Clause3, 3=Clause5, 4=Review, 5=Survey, 6=Done
 function updateProgressBar() {
   let activeStep;
 
   if (currentStage === 0) activeStep = 0;
-  else if (currentStage === 4) activeStep = 5;
+  else if (currentStage === 1) activeStep = 1 + currentClauseIndex;
   else if (currentStage === 3) activeStep = 4;
-  else activeStep = 1 + currentClauseIndex;
+  else if (currentStage === 4) activeStep = 5;
+  else if (currentStage === 5) activeStep = 6;
 
   document.querySelectorAll('.step').forEach((s, i) => {
     s.classList.remove('active', 'done');
@@ -966,6 +1040,7 @@ function goToStage(n) {
 
   if (n === 1) loadReadClause(currentClauseIndex);
   if (n === 3) loadFinalReview();
+  if (n === 4) checkSurveyBtn();
 }
 
 // ── Stage 1: Read & Analyse + AI chat ────────────────────────────────────────
@@ -1182,6 +1257,19 @@ function goBackToLastClause() {
   goToStage(1);
 }
 
+// ── Stage 4: Survey validation ───────────────────────────────────────────────
+function checkSurveyBtn() {
+  const helpful = document.getElementById('surveyHelpful')?.value;
+  const influence = document.getElementById('surveyInfluence')?.value;
+  const confidence = document.getElementById('surveyConfidence')?.value;
+  const useAgain = document.getElementById('surveyUseAgain')?.value;
+  const btn = document.getElementById('finalSubmitBtn');
+
+  if (btn) {
+    btn.disabled = !(helpful && influence && confidence && useAgain);
+  }
+}
+
 // ── Stage 4: Submit ──────────────────────────────────────────────────────────
 async function submitFinal() {
   const btn = document.getElementById('finalSubmitBtn');
@@ -1196,6 +1284,11 @@ async function submitFinal() {
   const year = document.getElementById('year').value || 'Not provided';
   const aiFamiliarity = document.getElementById('aiFamiliarity').value || 'Not provided';
   const policyAttitude = document.getElementById('policyAttitude').value || 'Not provided';
+  const surveyHelpful = document.getElementById('surveyHelpful').value || 'Not provided';
+  const surveyInfluence = document.getElementById('surveyInfluence').value || 'Not provided';
+  const surveyConfidence = document.getElementById('surveyConfidence').value || 'Not provided';
+  const surveyUseAgain = document.getElementById('surveyUseAgain').value || 'Not provided';
+  const surveyComments = document.getElementById('surveyComments').value || '';
   const finalWC = finalAnalysis.trim().split(/\s+/).filter(Boolean).length;
   const totalChatTurns = clauseChatHistories.reduce(
     (sum, h) => sum + h.filter(m => m.role === 'user').length,
@@ -1207,6 +1300,11 @@ async function submitFinal() {
     year,
     ai_familiarity: aiFamiliarity,
     policy_attitude: policyAttitude,
+    survey_helpful: surveyHelpful,
+    survey_influence: surveyInfluence,
+    survey_confidence: surveyConfidence,
+    survey_use_again: surveyUseAgain,
+    survey_comments: surveyComments,
     original_analysis: finalAnalysis,
     revised_analysis: finalAnalysis,
     original_word_count: finalWC,
@@ -1240,12 +1338,16 @@ async function submitFinal() {
     Year: ${escapeHTML(year)}<br>
     AI familiarity: ${escapeHTML(aiFamiliarity)}<br>
     Policy attitude: ${escapeHTML(policyAttitude)}<br>
+    AI assistant helpfulness: ${escapeHTML(surveyHelpful)}<br>
+    AI influence: ${escapeHTML(surveyInfluence)}<br>
+    Confidence: ${escapeHTML(surveyConfidence)}<br>
+    Use again: ${escapeHTML(surveyUseAgain)}<br>
     Final analysis: ${finalWC} words<br>
     AI chat messages sent: ${totalChatTurns}<br>
     Timestamp: ${new Date().toLocaleString()}
   `;
 
-  goToStage(4);
+  goToStage(5);
 }
 
 // ── Utilities ────────────────────────────────────────────────────────────────
