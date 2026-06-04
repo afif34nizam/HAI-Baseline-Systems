@@ -630,6 +630,30 @@
   .revise-chat-msg.user { background: var(--text); color: #fff; align-self: flex-end; border-bottom-right-radius: 2px; }
   .revise-chat-msg.ai { background: var(--surface2); border: 1px solid var(--border); color: var(--text); align-self: flex-start; border-bottom-left-radius: 2px; }
   .revise-chat-input-row { display: flex; gap: 8px; align-items: flex-end; padding: 0.5rem 0.75rem; border-top: 1px solid var(--border); background: var(--surface2); }
+
+
+  /* Linear scale survey */
+  .linear-scale {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 0.75rem 0;
+    font-size: 13px;
+    color: var(--text2);
+  }
+  .linear-scale label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--text);
+    cursor: pointer;
+    margin: 0;
+  }
+  .linear-scale input[type="radio"] { accent-color: var(--accent); }
+  .linear-scale span { font-size: 12px; color: var(--text2); text-align: center; line-height: 1.25; }
+  .linear-scale small { font-size: 10px; color: var(--text3); }
 </style>
 </head>
 <body>
@@ -839,61 +863,110 @@
   <div class="stage" id="stage-4">
     <div class="card">
       <div class="card-title">Final Survey</div>
-      <div class="card-sub">Please answer these quick questions before submitting your analysis.</div>
+      <div class="card-sub">Please answer these questions before submitting your analysis.</div>
 
-      <div class="info-row">
-        <div class="info-field">
-          <label>How helpful was the AI assistant?</label>
-          <select id="surveyHelpful" onchange="checkSurveyBtn()" oninput="checkSurveyBtn()">
+      <div class="card" style="background:var(--surface2);padding:1rem;margin-bottom:1rem;">
+        <div class="card-title" style="font-size:1.05rem;margin-bottom:0.75rem;">Section 1: Demographics &amp; Baseline Bias</div>
+
+        <div class="info-field" style="margin-bottom:1rem;">
+          <label>Participant Name <span style="color:var(--text3);font-weight:400;">(To map their text responses anonymously)</span></label>
+          <input type="text" id="surveyParticipantName" placeholder="Enter participant name" oninput="checkSurveyBtn()">
+        </div>
+
+        <div class="info-field" style="margin-bottom:1rem;">
+          <label>How frequently do you use LLMs (like ChatGPT, Claude, Gemini) in your daily university workflow?</label>
+          <select id="surveyLLMFrequency" onchange="checkSurveyBtn()" oninput="checkSurveyBtn()">
             <option value="" disabled selected>Select one…</option>
-            <option>Very helpful</option>
-            <option>Somewhat helpful</option>
-            <option>Neutral</option>
-            <option>Not very helpful</option>
-            <option>Not helpful at all</option>
+            <option>Never</option>
+            <option>Rarely</option>
+            <option>Weekly</option>
+            <option>Daily</option>
           </select>
         </div>
 
-        <div class="info-field">
-          <label>Did the AI influence your final analysis?</label>
-          <select id="surveyInfluence" onchange="checkSurveyBtn()" oninput="checkSurveyBtn()">
-            <option value="" disabled selected>Select one…</option>
-            <option>A lot</option>
-            <option>Somewhat</option>
-            <option>A little</option>
-            <option>Not at all</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="info-row">
-        <div class="info-field">
-          <label>How confident are you in your final analysis?</label>
-          <select id="surveyConfidence" onchange="checkSurveyBtn()" oninput="checkSurveyBtn()">
-            <option value="" disabled selected>Select one…</option>
-            <option>Very confident</option>
-            <option>Somewhat confident</option>
-            <option>Neutral</option>
-            <option>Not very confident</option>
-            <option>Not confident at all</option>
-          </select>
-        </div>
-
-        <div class="info-field">
-          <label>Would you use this kind of AI assistant again?</label>
-          <select id="surveyUseAgain" onchange="checkSurveyBtn()" oninput="checkSurveyBtn()">
-            <option value="" disabled selected>Select one…</option>
-            <option>Yes</option>
-            <option>Maybe</option>
-            <option>No</option>
-          </select>
+        <div class="info-field" style="margin-bottom:0;">
+          <label>What is your general attitude toward current university policies regarding student life and academic integrity?</label>
+          <div class="linear-scale" data-required="true">
+            <span>1<br><small>Very Dissatisfied</small></span>
+            <label><input type="radio" name="surveyPolicySatisfaction" value="1" onchange="checkSurveyBtn()"> 1</label>
+            <label><input type="radio" name="surveyPolicySatisfaction" value="2" onchange="checkSurveyBtn()"> 2</label>
+            <label><input type="radio" name="surveyPolicySatisfaction" value="3" onchange="checkSurveyBtn()"> 3</label>
+            <label><input type="radio" name="surveyPolicySatisfaction" value="4" onchange="checkSurveyBtn()"> 4</label>
+            <label><input type="radio" name="surveyPolicySatisfaction" value="5" onchange="checkSurveyBtn()"> 5</label>
+            <span>5<br><small>Very Satisfied</small></span>
+          </div>
         </div>
       </div>
 
-      <label style="display:block;font-size:12px;color:var(--text2);margin-bottom:4px;font-weight:500;">
-        Any additional comments? <span style="color:var(--text3);font-weight:400;">(Optional)</span>
-      </label>
-      <textarea id="surveyComments" placeholder="Write your comments here..." style="min-height:120px;"></textarea>
+      <div class="card" style="background:var(--surface2);padding:1rem;margin-bottom:1rem;">
+        <div class="card-title" style="font-size:1.05rem;margin-bottom:0.75rem;">Section 2: Core System Experience</div>
+
+        <div class="info-field" style="margin-bottom:1rem;">
+          <label>The generic chatbot helped me identify missing perspectives or gaps in my initial policy analysis.</label>
+          <div class="linear-scale">
+            <span>1<br><small>Strongly Disagree</small></span>
+            <label><input type="radio" name="surveyMissingPerspectives" value="1" onchange="checkSurveyBtn()"> 1</label>
+            <label><input type="radio" name="surveyMissingPerspectives" value="2" onchange="checkSurveyBtn()"> 2</label>
+            <label><input type="radio" name="surveyMissingPerspectives" value="3" onchange="checkSurveyBtn()"> 3</label>
+            <label><input type="radio" name="surveyMissingPerspectives" value="4" onchange="checkSurveyBtn()"> 4</label>
+            <label><input type="radio" name="surveyMissingPerspectives" value="5" onchange="checkSurveyBtn()"> 5</label>
+            <span>5<br><small>Strongly Agree</small></span>
+          </div>
+        </div>
+
+        <div class="info-field" style="margin-bottom:1rem;">
+          <label>The generic chatbot challenged me to think more critically about how the policy impacts student well-being and stress.</label>
+          <div class="linear-scale">
+            <span>1<br><small>Strongly Disagree</small></span>
+            <label><input type="radio" name="surveyCriticalWellbeing" value="1" onchange="checkSurveyBtn()"> 1</label>
+            <label><input type="radio" name="surveyCriticalWellbeing" value="2" onchange="checkSurveyBtn()"> 2</label>
+            <label><input type="radio" name="surveyCriticalWellbeing" value="3" onchange="checkSurveyBtn()"> 3</label>
+            <label><input type="radio" name="surveyCriticalWellbeing" value="4" onchange="checkSurveyBtn()"> 4</label>
+            <label><input type="radio" name="surveyCriticalWellbeing" value="5" onchange="checkSurveyBtn()"> 5</label>
+            <span>5<br><small>Strongly Agree</small></span>
+          </div>
+        </div>
+
+        <div class="info-field" style="margin-bottom:1rem;">
+          <label>I felt like the chatbot did most of the writing and phrasing for me, rather than making me do the critical thinking.</label>
+          <div class="linear-scale">
+            <span>1<br><small>Strongly Disagree</small></span>
+            <label><input type="radio" name="surveyChatbotWriting" value="1" onchange="checkSurveyBtn()"> 1</label>
+            <label><input type="radio" name="surveyChatbotWriting" value="2" onchange="checkSurveyBtn()"> 2</label>
+            <label><input type="radio" name="surveyChatbotWriting" value="3" onchange="checkSurveyBtn()"> 3</label>
+            <label><input type="radio" name="surveyChatbotWriting" value="4" onchange="checkSurveyBtn()"> 4</label>
+            <label><input type="radio" name="surveyChatbotWriting" value="5" onchange="checkSurveyBtn()"> 5</label>
+            <span>5<br><small>Strongly Agree</small></span>
+          </div>
+        </div>
+
+        <div class="info-field" style="margin-bottom:0;">
+          <label>The feedback and suggestions I received from the generic chatbot were highly actionable and easy to apply.</label>
+          <div class="linear-scale">
+            <span>1<br><small>Strongly Disagree</small></span>
+            <label><input type="radio" name="surveyActionableFeedback" value="1" onchange="checkSurveyBtn()"> 1</label>
+            <label><input type="radio" name="surveyActionableFeedback" value="2" onchange="checkSurveyBtn()"> 2</label>
+            <label><input type="radio" name="surveyActionableFeedback" value="3" onchange="checkSurveyBtn()"> 3</label>
+            <label><input type="radio" name="surveyActionableFeedback" value="4" onchange="checkSurveyBtn()"> 4</label>
+            <label><input type="radio" name="surveyActionableFeedback" value="5" onchange="checkSurveyBtn()"> 5</label>
+            <span>5<br><small>Strongly Agree</small></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="background:var(--surface2);padding:1rem;margin-bottom:1rem;">
+        <div class="card-title" style="font-size:1.05rem;margin-bottom:0.75rem;">Section 3: Control Group Specific Feedback</div>
+
+        <label style="display:block;font-size:12px;color:var(--text2);margin-bottom:4px;font-weight:500;">
+          What were the main limitations of using a generic chatbot when you were trying to improve your policy analysis?
+        </label>
+        <textarea id="surveyGenericLimitations" placeholder="Write your answer here..." style="min-height:120px;margin-bottom:1rem;" oninput="checkSurveyBtn()"></textarea>
+
+        <label style="display:block;font-size:12px;color:var(--text2);margin-bottom:4px;font-weight:500;">
+          Did you feel the chatbot gave you generic, surface-level advice, or did it actually understand nuanced student lived experiences? Please explain.
+        </label>
+        <textarea id="surveyNuancedExperience" placeholder="Write your answer here..." style="min-height:120px;" oninput="checkSurveyBtn()"></textarea>
+      </div>
 
       <div class="btn-row" style="margin-top:1.5rem;justify-content:space-between;">
         <button class="btn btn-secondary" onclick="goToStage(3)">← Back to Review</button>
@@ -1258,15 +1331,35 @@ function goBackToLastClause() {
 }
 
 // ── Stage 4: Survey validation ───────────────────────────────────────────────
+function getRadioValue(name) {
+  const selected = document.querySelector(`input[name="${name}"]:checked`);
+  return selected ? selected.value : '';
+}
+
 function checkSurveyBtn() {
-  const helpful = document.getElementById('surveyHelpful')?.value;
-  const influence = document.getElementById('surveyInfluence')?.value;
-  const confidence = document.getElementById('surveyConfidence')?.value;
-  const useAgain = document.getElementById('surveyUseAgain')?.value;
+  const participantName = document.getElementById('surveyParticipantName')?.value.trim();
+  const llmFrequency = document.getElementById('surveyLLMFrequency')?.value;
+  const policySatisfaction = getRadioValue('surveyPolicySatisfaction');
+  const missingPerspectives = getRadioValue('surveyMissingPerspectives');
+  const criticalWellbeing = getRadioValue('surveyCriticalWellbeing');
+  const chatbotWriting = getRadioValue('surveyChatbotWriting');
+  const actionableFeedback = getRadioValue('surveyActionableFeedback');
+  const genericLimitations = document.getElementById('surveyGenericLimitations')?.value.trim();
+  const nuancedExperience = document.getElementById('surveyNuancedExperience')?.value.trim();
   const btn = document.getElementById('finalSubmitBtn');
 
   if (btn) {
-    btn.disabled = !(helpful && influence && confidence && useAgain);
+    btn.disabled = !(
+      participantName &&
+      llmFrequency &&
+      policySatisfaction &&
+      missingPerspectives &&
+      criticalWellbeing &&
+      chatbotWriting &&
+      actionableFeedback &&
+      genericLimitations &&
+      nuancedExperience
+    );
   }
 }
 
@@ -1284,11 +1377,15 @@ async function submitFinal() {
   const year = document.getElementById('year').value || 'Not provided';
   const aiFamiliarity = document.getElementById('aiFamiliarity').value || 'Not provided';
   const policyAttitude = document.getElementById('policyAttitude').value || 'Not provided';
-  const surveyHelpful = document.getElementById('surveyHelpful').value || 'Not provided';
-  const surveyInfluence = document.getElementById('surveyInfluence').value || 'Not provided';
-  const surveyConfidence = document.getElementById('surveyConfidence').value || 'Not provided';
-  const surveyUseAgain = document.getElementById('surveyUseAgain').value || 'Not provided';
-  const surveyComments = document.getElementById('surveyComments').value || '';
+  const surveyParticipantName = document.getElementById('surveyParticipantName').value.trim() || 'Not provided';
+  const surveyLLMFrequency = document.getElementById('surveyLLMFrequency').value || 'Not provided';
+  const surveyPolicySatisfaction = getRadioValue('surveyPolicySatisfaction') || 'Not provided';
+  const surveyMissingPerspectives = getRadioValue('surveyMissingPerspectives') || 'Not provided';
+  const surveyCriticalWellbeing = getRadioValue('surveyCriticalWellbeing') || 'Not provided';
+  const surveyChatbotWriting = getRadioValue('surveyChatbotWriting') || 'Not provided';
+  const surveyActionableFeedback = getRadioValue('surveyActionableFeedback') || 'Not provided';
+  const surveyGenericLimitations = document.getElementById('surveyGenericLimitations').value.trim() || 'Not provided';
+  const surveyNuancedExperience = document.getElementById('surveyNuancedExperience').value.trim() || 'Not provided';
   const finalWC = finalAnalysis.trim().split(/\s+/).filter(Boolean).length;
   const totalChatTurns = clauseChatHistories.reduce(
     (sum, h) => sum + h.filter(m => m.role === 'user').length,
@@ -1300,11 +1397,15 @@ async function submitFinal() {
     year,
     ai_familiarity: aiFamiliarity,
     policy_attitude: policyAttitude,
-    survey_helpful: surveyHelpful,
-    survey_influence: surveyInfluence,
-    survey_confidence: surveyConfidence,
-    survey_use_again: surveyUseAgain,
-    survey_comments: surveyComments,
+    survey_participant_name: surveyParticipantName,
+    survey_llm_frequency: surveyLLMFrequency,
+    survey_policy_satisfaction: surveyPolicySatisfaction,
+    survey_missing_perspectives: surveyMissingPerspectives,
+    survey_critical_wellbeing: surveyCriticalWellbeing,
+    survey_chatbot_writing: surveyChatbotWriting,
+    survey_actionable_feedback: surveyActionableFeedback,
+    survey_generic_limitations: surveyGenericLimitations,
+    survey_nuanced_experience: surveyNuancedExperience,
     original_analysis: finalAnalysis,
     revised_analysis: finalAnalysis,
     original_word_count: finalWC,
@@ -1338,10 +1439,13 @@ async function submitFinal() {
     Year: ${escapeHTML(year)}<br>
     AI familiarity: ${escapeHTML(aiFamiliarity)}<br>
     Policy attitude: ${escapeHTML(policyAttitude)}<br>
-    AI assistant helpfulness: ${escapeHTML(surveyHelpful)}<br>
-    AI influence: ${escapeHTML(surveyInfluence)}<br>
-    Confidence: ${escapeHTML(surveyConfidence)}<br>
-    Use again: ${escapeHTML(surveyUseAgain)}<br>
+    Participant name: ${escapeHTML(surveyParticipantName)}<br>
+    LLM use frequency: ${escapeHTML(surveyLLMFrequency)}<br>
+    Policy satisfaction: ${escapeHTML(surveyPolicySatisfaction)} / 5<br>
+    Missing perspectives: ${escapeHTML(surveyMissingPerspectives)} / 5<br>
+    Critical well-being thinking: ${escapeHTML(surveyCriticalWellbeing)} / 5<br>
+    Chatbot did writing/phrasing: ${escapeHTML(surveyChatbotWriting)} / 5<br>
+    Actionable feedback: ${escapeHTML(surveyActionableFeedback)} / 5<br>
     Final analysis: ${finalWC} words<br>
     AI chat messages sent: ${totalChatTurns}<br>
     Timestamp: ${new Date().toLocaleString()}
